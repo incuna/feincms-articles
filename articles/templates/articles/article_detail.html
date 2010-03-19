@@ -1,0 +1,22 @@
+{% extends "articles/base.html" %}
+
+{% load feincms_tags feincms_page_tags tagging_tags %}
+
+{% block article-title %}<h2>{{ object.category }}</h2>{% endblock %}
+
+{% block article-content %}
+    <h3>{{ object }}</h3>
+    <div class="date"><span class="month">{{ object.publication_date|date:"M" }}</span> <span class="day">{{ object.publication_date|date:"j" }}</span> <span class="year">{{ object.publication_date|date:"Y" }}</span></div>
+    {% tags_for_object object as tags %}
+    {% if tags %}
+    <div class="tags">
+        <strong>Tagged:</strong>
+        {% for atag in tags %}<a class="tag" href="{% url article_tag tag=atag %}"><strong>{{ atag }}</strong></a> {% endfor %}
+    </div>
+    {% endif %}
+
+    {% for content in object.content.main %}
+        {% feincms_render_content content request %}
+    {% endfor %} 
+{% endblock %}
+    
