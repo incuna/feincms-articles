@@ -19,7 +19,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
-    @depend_on_related('self')
+    @depend_on_related('self',type='forward')
     def local_url(self):
         if self.parent:
             root = self.parent.local_url
