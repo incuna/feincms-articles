@@ -3,37 +3,49 @@
 {% load i18n tagging_tags %}
 
 {% block article-title %}
-<h2>{% if category %}{{ category }}{% else %}{% trans 'Articles' %}{% endif %}</h2>
+    <h2>{% if category %}{{ category }}{% else %}{% trans 'Articles' %}{% endif %}</h2>
 {% endblock %}
 
 {% block article-aside %}
-{% if categories %}
-<h3>Categories</h3>
-<ul class="article-categories">
-{% for category in categories %}  
-<li class="article"><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
-{% endfor %}
-</ul>
-{% endif %}
-    {% tags_for_model articles.Article as tags %}
-    {% if tags %}
-    <h3>Tags</h3>
-    <div class="tags">
-        {% for atag in tags %}<a class="tag{% ifequal atag tag %} selected{% endifequal %}" href="{% url article_tag tag=atag %}"><strong>{{ atag }}</strong></a> {% endfor %}
+
+    {% if categories %}
+    <div class="categories">
+        <h3>Categories</h3>
+        <ul>
+        {% for category in categories %}  
+            <li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+        {% endfor %}
+        </ul>
     </div>
     {% endif %}
+    
+    {% tags_for_model articles.Article as tags %}
+    {% if tags %}
+    <div class="tags">
+        <h3>Tags</h3>
+        <ul>
+        {% for atag in tags %}
+            <li><a class="tag{% ifequal atag tag %} selected{% endifequal %}" href="{% url article_tag tag=atag %}">{{ atag }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
 {% endblock %}
 
+
 {% block article-content %}
-{#% autopaginate articles 10 %#}
-{% for article in object_list %}  
-<div class="article">
-    <div class="date"><span class="month">{{ article.publication_date|date:"M" }}</span> <span class="day">{{ article.publication_date|date:"j" }}</span> <span class="year">{{ article.publication_date|date:"Y" }}</span></div>
-    <div class="article-summary">
-        <h3><a href="{{article.get_absolute_url }}">{{ article }}</a></h3>
-        <p>{{ article.summary }}</p>
+
+    {#% autopaginate articles 10 %#}
+    {% for article in object_list %}  
+    <div class="article short">
+        <div class="date"><span class="month">{{ article.publication_date|date:"M" }}</span> <span class="day">{{ article.publication_date|date:"j" }}</span> <span class="year">{{ article.publication_date|date:"Y" }}</span></div>
+        <div class="summary">
+            <h3><a href="{{article.get_absolute_url }}">{{ article }}</a></h3>
+            <p>{{ article.summary }}</p>
+        </div>
     </div>
-</div>
-{% endfor %}
-{#% paginate %#}
+    {% endfor %}
+    {#% paginate %#}
+    
 {% endblock %}
