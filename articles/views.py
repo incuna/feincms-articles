@@ -27,11 +27,9 @@ def article_category(request, category_url=None, extra_context=None):
     articles = Article.objects.active()
     if category_url is not None:
         category = get_object_or_404(Category, local_url=category_url)
-        categories = category.children.all()
         articles = articles.filter(category__in=category.get_descendants(include_self=True))
     else:
         category = None
-        categories = Category.objects.filter(parent__isnull=True)
 
     if extra_context is not None:
         contect.update(extra_context)
@@ -39,7 +37,6 @@ def article_category(request, category_url=None, extra_context=None):
     context.update({
         'object_list': articles,
         'category': category,
-        'categories': categories,
     })
     
     return render_to_response('articles/article_category.html', context)
