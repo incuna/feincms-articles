@@ -7,10 +7,14 @@
 {% endblock %}
 
 {% block article-aside %}
-<h3>{% trans 'Categories' %}</h3>
+
+    {# TODO: FIX THIS PROPERLY #}
+    {% if category %}
+    <h3>{% trans 'Categories' %}</h3>
     <div class="sublinks">
     {% categories category %}
     </div>
+    {% endif %}
 
     {% tags_for_model articles.Article as tags %}
     {% if tags %}
