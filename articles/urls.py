@@ -9,7 +9,8 @@ urlpatterns = patterns(
              #paginate_by=10, 
              allow_empty=True,
              #template_object_name='articles',
-             template_name='articles/article_category.html',
+             template_name='articles/article_list.html',
+             extra_context={'category': None},
             ),
         name="article_tag"),
                       )

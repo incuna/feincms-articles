@@ -39,5 +39,5 @@ def article_category(request, category_url=None, extra_context=None):
         'category': category,
     })
     
-    return render_to_response('articles/article_category.html', context)
+    return render_to_response('articles/article_list.html', context)
 
