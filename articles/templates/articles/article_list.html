@@ -1,6 +1,6 @@
 {% extends "articles/base.html" %}
 
-{% load i18n tagging_tags article %}
+{% load i18n tagging_tags article pagination_tags %}
 
 {% block article-title %}
     <h2>{% if category %}{{ category }}{% else %}{% trans 'Articles' %}{% endif %}</h2>
@@ -30,7 +30,7 @@
 
 {% block article-content %}
 
-    {#% autopaginate articles 10 %#}
+    {% autopaginate object_list 10 %}
     {% for article in object_list %}  
     <div class="article short">
         <div class="date"><span class="month">{{ article.publication_date|date:"M" }}</span> <span class="day">{{ article.publication_date|date:"j" }}</span> <span class="year">{{ article.publication_date|date:"Y" }}</span></div>
@@ -40,6 +40,6 @@
         </div>
     </div>
     {% endfor %}
-    {#% paginate %#}
+    {% paginate %}
     
 {% endblock %}
