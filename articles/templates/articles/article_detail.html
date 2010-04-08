@@ -1,9 +1,27 @@
 {% extends "articles/base.html" %}
 
-{% load feincms_tags feincms_page_tags tagging_tags %}
+{% load i18n tagging_tags article feincms_tags feincms_page_tags tagging_tags %}
 
-{% block article-title %}
-{# <h2>{{ object.category }}</h2> #}
+{% block article-title %}{% endblock %}
+
+{% block article-aside %}
+
+    <h3>{% trans 'Categories' %}</h3>
+    <div class="sublinks">
+    {% categories object.category %}
+    </div>
+
+    {% if tags %}
+    <div class="tags">
+        <h3>{% trans 'Tags' %}</h3>
+        <ul>
+        {% for atag in tags %}
+        <li><a class="tag{% ifequal atag tag %} selected{% endifequal %}" href="{{ object.category.get_absolute_url }}?tag={{ atag }}">{{ atag }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
 {% endblock %}
 
 {% block article-content %}

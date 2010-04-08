@@ -13,13 +13,12 @@
     {% categories category %}
     </div>
 
-    {% tags_for_model articles.Article as tags %}
     {% if tags %}
     <div class="tags">
         <h3>{% trans 'Tags' %}</h3>
         <ul>
         {% for atag in tags %}
-            <li><a class="tag{% ifequal atag tag %} selected{% endifequal %}" href="{% url article_tag tag=atag %}">{{ atag }}</a></li>
+        <li{% ifequal atag tag %} class="current"{% endifequal %}><a class="tag" href="?tag={{ atag }}">{{ atag }}</a></li>
         {% endfor %}
         </ul>
     </div>
