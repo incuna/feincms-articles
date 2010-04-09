@@ -37,7 +37,7 @@
                 <span class="label">Tagged:</span>
                 <ul>
                 {% for atag in tags %}
-                    <li><a href="{% url article_tag tag=atag %}">{{ atag }}</a></li>
+                    <li><a href="{{ object.category.get_absolute_url }}?tag={{ atag }}">{{ atag }}</a></li>
                 {% endfor %}
                 </ul>
             </div>
