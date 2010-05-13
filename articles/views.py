@@ -27,11 +27,11 @@ def article_detail(request, category_url, slug, extra_context=None):
 def article_category(request, category_url=None, extra_context=None):
     context = RequestContext(request)
     
-    articles = Article.objects.active()
     if category_url is not None:
         category = get_object_or_404(Category, local_url=category_url)
-        articles = articles.filter(category__in=category.get_descendants(include_self=True))
+        articles = Article.objects.active().filter(category=category)
     else:
+        articles = Article.objects.none()
         category = None
 
     tags = Tag.objects.usage_for_queryset(articles)

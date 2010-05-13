@@ -29,6 +29,10 @@
 
 {% block article-content %}
 
+    <div class="sublinks">
+    {% categories category category %}
+    </div>
+    
     {% autopaginate object_list 10 %}
     {% for article in object_list %}  
     <div class="article short">
