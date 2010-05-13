@@ -12,7 +12,7 @@ from django.conf import settings
 
 class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     date_hierarchy = 'publication_date'
-    list_display = ('__unicode__', 'publication_date', 'publication_end_date',)
+    list_display = ('__unicode__', 'category', 'publication_date', 'publication_end_date',)
     list_filter = ( 'category',)
     search_fields = ('title', 'slug',)
     prepopulated_fields = {
