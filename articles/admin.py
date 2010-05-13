@@ -25,7 +25,7 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     
 
 class CategoryAdmin(editor.TreeEditor):
-    list_display = ('name', 'slug')
+    list_display = ('__unicode__', )
     list_filter = ('parent',)
     prepopulated_fields = {
         'slug': ('name',),
