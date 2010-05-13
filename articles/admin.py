@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django import forms
-from feincms.admin import editor
+from incunafein.admin import editor
 from models import Article, Category
- 
+from django.conf import settings
+
 #class ArticleForm(forms.ModelForm):
 #    category = forms.ModelChoiceField(queryset=Category.objects.filter(parent__isnull=False))
 
@@ -30,7 +31,6 @@ class CategoryAdmin(editor.TreeEditor):
         'slug': ('name',),
         }
  
-
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)
 
