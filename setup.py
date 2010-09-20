@@ -5,6 +5,8 @@ setup(
     install_requires=[
         "FeinCMS",
         "django-tagging",
+        "django-mptt-2",
+        "django-pagination",
         #"django-denorm",
     ],
     version = "0.1",
