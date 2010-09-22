@@ -1,0 +1,5 @@
+{{ object.title }}
+{{ object.summary }}
+{% for content in object.content.main %}
+  {{ content.render|striptags }}
+{% endfor %}
