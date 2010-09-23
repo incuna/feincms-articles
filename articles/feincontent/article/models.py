@@ -25,5 +25,6 @@ class ArticleContent(models.Model):
         else:
             context = { 'content': self }
 
-        return render_to_string(['content/articles/article.html',
+        return render_to_string(['content/articles/category_%s.html' % self.category.slug,
+                                 'content/articles/default.html',
                                 ], context)
