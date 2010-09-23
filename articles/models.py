@@ -76,12 +76,9 @@ class Article(Base):
     #get_absolute_url = models.permalink(get_absolute_url)
 
 
-signals.post_syncdb.connect(check_database_schema(Article, __name__), weak=False)
-
 Article.register_regions(
     ('main', 'Main region'),
     )
 
 Article.create_content_type(RichTextContent)
 Article.create_content_type(MediaFileContent, POSITION_CHOICES=(('default', _('Default')),))
-
