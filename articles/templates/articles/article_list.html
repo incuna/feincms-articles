@@ -18,12 +18,12 @@
         <h3>{% trans 'Tags' %}</h3>
         <ul>
         {% for atag in tags %}
-        <li{% ifequal atag tag %} class="current"{% endifequal %}><a class="tag" href="?tag={{ atag }}">{{ atag }}</a></li>
+        <li{% ifequal atag tag %} class="current"{% endifequal %}><a class="tag" href="{{ category.get_absolute_url }}?tag={{ atag }}">{{ atag }}</a></li>
         {% endfor %}
         </ul>
     </div>
     {% endif %}
-    
+
 {% endblock %}
 
 

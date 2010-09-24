@@ -18,6 +18,7 @@ def article_detail(request, category_url, slug, extra_context=None):
 
     context.update({
         'object': article,
+        'category' : article.category,
         'tags': tags,
     })
     
