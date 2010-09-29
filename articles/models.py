@@ -27,7 +27,8 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
-    calendar_feed = models.CharField(max_length=255, blank=True, null=True, help_text='Google calendar feed url e.g. https://www.google.com/calendar/feeds/username@gmail.com/private/full/')
+    calendar_feed = models.CharField(max_length=255, blank=True, null=True, 
+                                     help_text='Google calendar feed url e.g. https://www.google.com/calendar/feeds/username@gmail.com/private/full/')
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
     @depend_on_related('self',type='forward')

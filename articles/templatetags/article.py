@@ -33,6 +33,60 @@ class CalendarNode(template.Node):
             {% calendar category width="580" height="350" %}
     """
 
+    COLOURS = ['D96666',
+               'E67399',
+               '8C66D9',
+               '668CB3',
+               '668CD9',
+               '59BFB3',
+               '65AD89',
+               '4CB052',
+               '8CBF40',
+               'E0C240',
+               'E6804D',
+               'BE9494',
+               'A992A9',
+               '8997A5',
+               '94A2BE',
+               '85AAA5',
+               'A7A77D',
+               'C4A883',
+               'C7561E',
+               'B5515D',
+               'C244AB',
+               '603F99',
+               '536CA6',
+               '3640AD',
+               '3C995B',
+               '5CA632',
+               '7EC225',
+               'A7B828',
+               'CF9911',
+               'D47F1E',
+               'B56414',
+               '914D14',
+               'AB2671',
+               '9643A5',
+               '4585A3',
+               '737373',
+               '41A587',
+               'D1BC36',
+               'AD2D2D',
+              ]
+
+    @staticmethod
+    def coulours(start = 0):
+        """
+        Returns a stream of colours, if the end of the list is reached then it starts back at the beginning.
+        """
+        while True:
+            try:
+                yield CalendarNode.COLOURS[start]
+            except IndexError:
+                start = 0
+                yield CalendarNode.COLOURS[start]
+            start += 1
+
     def __init__(self, category, attrs):
         self.category = category
         self.attrs = attrs
@@ -79,21 +133,16 @@ class CalendarNode(template.Node):
         if attrs:
             final_attrs.update(attrs)
 
+        coulours = self.coulours()
         src = "https://www.google.com/calendar/embed?%s" % ( '&'.join(["%s=%s" % pair for pair in src_attrs.items()]) )
         for c in categories:
-            # /calendar/feeds/fkkq7cgbjk7nk32j10ug61oq04@group.calendar.google.com/private/full/
             m = re_calendar.match(c.calendar_feed)
             if m:
-                src += "&src=%s&color=%%23%s" % (m.group(1), '856508')
-        
+                src += "&src=%s&color=%%23%s" % (m.group(1), coulours.next())
+
         final_attrs['src'] = src
 
         return mark_safe(u'<iframe%s ></iframe>' % flatatt(final_attrs))
-
-
-    """
-<iframe src="https://www.google.com/calendar/embed?showTitle=0&amp;showTz=0&amp;height=350&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=calendars%40incuna.com&amp;color=%23691426&amp;src=fkkq7cgbjk7nk32j10ug61oq04%40group.calendar.google.com&amp;color=%23856508&amp;src=en.uk%23holiday%40group.v.calendar.google.com&amp;color=%23182C57&amp;ctz=Europe%2FLondon" style=" border-width:0 " width="580" height="350" frameborder="0" scrolling="no"></iframe>
-    """
 
 @register.tag()
 def calendar(parser, token):
