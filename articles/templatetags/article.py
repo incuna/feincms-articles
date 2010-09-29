@@ -41,12 +41,15 @@ class CalendarNode(template.Node):
         category = self.category.resolve(context)
         attrs = {}
 
-        final_attrs = dict(style=" border-width:0 ", width="580", height="350", frameborder="0", scrolling="no")
+        final_attrs = dict(style=" border-width:0 ", 
+                           width="580", 
+                           height="350", 
+                           frameborder="0", 
+                           scrolling="no")
 
         src_attrs = dict(showTitle="0", 
                          showCalendars="1", 
                          showTz="0", 
-                         height="350", 
                          wkst="1", 
                          bgcolor="%23FFFFFF", 
                          ctz="Europe%2FLondon"
