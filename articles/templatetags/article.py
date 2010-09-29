@@ -42,8 +42,8 @@ class CalendarNode(template.Node):
         attrs = {}
 
         final_attrs = dict(style=" border-width:0 ", 
-                           width="580", 
-                           height="350", 
+                           width="800", 
+                           height="600", 
                            frameborder="0", 
                            scrolling="no")
 
@@ -56,7 +56,10 @@ class CalendarNode(template.Node):
                         )
 
         if not isinstance(category, Category):
-            category = Category.objects.get(local_url=category)
+            try:
+                category = Category.objects.get(local_url=category)
+            except Category.DoesNotExist:
+                return ''
 
         categories = []
         if category.calendar_feed:
