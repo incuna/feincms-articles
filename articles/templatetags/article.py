@@ -1,8 +1,14 @@
+import re
 from django import template
 from django.forms.util import flatatt
+from django.utils.safestring import mark_safe
 from articles.models import Article, Category
 
 register = template.Library()
+
+# regex used to extract the calendar user from the feed url 
+# (e.g. https://www.google.com/calendar/feeds/username@gmail.com/private-abcdefg/full/ > username@gmail.com)
+re_calendar = re.compile(r""".*/([^@%]*(@|%40)[^/]*).*""") 
 
 @register.inclusion_tag('articles/categories.html')
 def categories(selected=None, current=None):
@@ -19,24 +25,6 @@ def categories(selected=None, current=None):
             'categories': categories,
            }
 
-#@register.inclusion_tag('articles/calendar.html')
-#def calendar(category, include_children=False):
-#    """
-#    Render a google calendar iframe embed.
-#    """
-
-#    if not isinstance(category, Category):
-#        category = Category.objects.get(local_url=category)
-
-#   """
-#   <iframe src="https://www.google.com/calendar/embed?showTitle=0&amp;showCalendars=0&amp;showTz=0&amp;height=350&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=fkkq7cgbjk7nk32j10ug61oq04%40group.calendar.google.com&amp;color=%23856508&amp;ctz=Europe%2FLondon" style=" border-width:0 " width="580" height="350" frameborder="0" scrolling="no"></iframe> 
-#   """
-
-#    return {'category': category,
-#            'rl': categories,
-#           }
-
-
 class CalendarNode(template.Node):
     """
         Render a google calendar (iframe) embed.
@@ -44,8 +32,6 @@ class CalendarNode(template.Node):
         Usage:
             {% calendar category width="580" height="350" %}
     """
-
-    src
 
     def __init__(self, category, attrs):
         self.category = category
@@ -58,21 +44,21 @@ class CalendarNode(template.Node):
         final_attrs = dict(style=" border-width:0 ", width="580", height="350", frameborder="0", scrolling="no")
 
         src_attrs = dict(showTitle="0", 
-                         showCalendars="0", 
+                         showCalendars="1", 
                          showTz="0", 
                          height="350", 
                          wkst="1", 
                          bgcolor="%23FFFFFF", 
-                         #src="fkkq7cgbjk7nk32j10ug61oq04%40group.calendar.google.com", 
-                         #color="%23856508", 
                          ctz="Europe%2FLondon"
                         )
 
+        if not isinstance(category, Category):
+            category = Category.objects.get(local_url=category)
 
         categories = []
-        if category.calendar_url:
+        if category.calendar_feed:
             categories.append(category)
-        categories.extend([for c in category.get_ancestors().filter(calendar_url__isnull=False)])
+        categories.extend(list(category.get_ancestors().filter(calendar_feed__isnull=False)))
 
         if not categories:
             return ''
@@ -84,23 +70,17 @@ class CalendarNode(template.Node):
             else:
                 attrs[key] = value
 
-        #t = template.loader.select_template(['articles/calendar.html'])
-        #context.push()
-        #context['category'] = category
-        #context['attrs'] = attrs
-        #output = t.render(context)
-        #context.pop()
-
-        #return output
-
         if attrs:
             final_attrs.update(attrs)
 
-        src = "https://www.google.com/calendar/embed?%s" % ( ["%s=%s" % pair for pair in src_attrs.items()].join('&amp;') )
+        src = "https://www.google.com/calendar/embed?%s" % ( '&'.join(["%s=%s" % pair for pair in src_attrs.items()]) )
         for c in categories:
-            src += "&amp;src=%s&amp;color=%%23%s" % (c.calendar_url, '856508')
+            # /calendar/feeds/fkkq7cgbjk7nk32j10ug61oq04@group.calendar.google.com/private/full/
+            m = re_calendar.match(c.calendar_feed)
+            if m:
+                src += "&src=%s&color=%%23%s" % (m.group(1), '856508')
         
-        attrs['src'] = src
+        final_attrs['src'] = src
 
         return mark_safe(u'<iframe%s ></iframe>' % flatatt(final_attrs))
 
@@ -115,13 +95,6 @@ def calendar(parser, token):
 
     if len(bits) < 2:
         raise template.TemplateSyntaxError("'%s tag requires at least 1 arguments." % bits[0])
-    if bits[2] == 'as':
-        varname = bits[3]
-        firstkey = 4
-        #raise template.TemplateSyntaxError("'2nd argument to %s tag must be 'as'." % bits[0])
-    else:
-        firstkey = 2
-        varname = None
 
     category = parser.compile_filter(bits[1])
     dict = {}
