@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from incunafein.admin import editor
-from models import Article, Category
+from models import DJANGOCAL_SYNC, Article, Category
 from django.conf import settings
 
 #class ArticleForm(forms.ModelForm):
@@ -30,6 +30,13 @@ class CategoryAdmin(editor.TreeEditor):
     prepopulated_fields = {
         'slug': ('name',),
         }
+    if DJANGOCAL_SYNC:
+        fieldsets = (
+            (None, {
+                'fields': ('name', 'slug', 'parent', 'calendar_feed', )
+            }),
+        )
+        
  
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)

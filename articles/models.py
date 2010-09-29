@@ -6,6 +6,16 @@ from django.utils.translation import ugettext_lazy as _
 from incuna.db.models import AutoSlugField
 from tagging.fields import TagField
 
+from django.conf import settings
+
+try:
+    from djangogcal.adapter import CalendarAdapter, CalendarEventData
+    from djangogcal.observer import CalendarObserver
+    DJANGOCAL_SYNC = True
+except ImportError:
+    DJANGOCAL_SYNC = False
+
+
 from feincms.models import Base
 from feincms.management.checker import check_database_schema
 from feincms.content.medialibrary.models import MediaFileContent
@@ -17,6 +27,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
+    calendar_feed = models.CharField(max_length=255, blank=True, null=True, help_text='Google calendar feed url e.g. https://www.google.com/calendar/feeds/username@gmail.com/private/full/')
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
     @depend_on_related('self',type='forward')
@@ -71,14 +82,48 @@ class Article(Base):
                 'category_url': self.category.local_url,
                 'slug': self.slug,
                 })
-    #def get_absolute_url(self):
-    #    return ('article_detail', (self.pub_date.strftime("%Y"), self.pub_date.strftime("%m"), self.slug))
-    #get_absolute_url = models.permalink(get_absolute_url)
-
 
 Article.register_regions(
     ('main', 'Main region'),
     )
-
 Article.create_content_type(RichTextContent)
 Article.create_content_type(MediaFileContent, POSITION_CHOICES=(('default', _('Default')),))
+
+
+if DJANGOCAL_SYNC:
+    class ArticleCalendarAdapter(CalendarAdapter):
+        """
+        A calendar adapter for the Showing model.
+        """
+
+        def get_event_data(self, instance):
+            """
+            Returns a CalendarEventData object filled with data from the adaptee.
+            """
+
+            return CalendarEventData(
+                start=instance.publication_date,
+                end=instance.publication_end_date or instance.publication_date,
+                title=instance.title,
+                content=instance.summary
+            )
+
+        def get_feed_url(self, instance):
+            try:
+                return instance.category.calendar_feed
+            except IndexError:
+                return None
+
+        def can_save(self, instance):
+            return self.get_feed_url(instance) is not None
+
+        def can_delete(self, instance):
+            return self.get_feed_url(instance) is not None
+
+
+    observer = CalendarObserver(
+        email=settings.CALENDAR_EMAIL,
+        password=settings.CALENDAR_PASSWORD,
+    )
+    observer.observe(Article, ArticleCalendarAdapter())
+
