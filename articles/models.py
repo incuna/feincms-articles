@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Q, signals
 from denorm import denormalized, depend_on_related
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.sites.models import Site
 from incuna.db.models import AutoSlugField
 from tagging.fields import TagField
 
@@ -27,8 +28,8 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
-    calendar_feed = models.CharField(max_length=255, blank=True, null=True, 
-                                     help_text='Google calendar feed url e.g. https://www.google.com/calendar/feeds/username@gmail.com/private/full/')
+    calendar_id = models.EmailField('calendar id', max_length=255, blank=True, null=True, 
+                                    help_text='Google Calendar Id e.g. username@gmail.com')
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
     @depend_on_related('self',type='forward')
@@ -49,6 +50,14 @@ class Category(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('article_category', (self.local_url,))
+
+
+    @property
+    def calendar_feed(self):
+        if self.calendar_id:
+            return "/calendar/feeds/%s/private/full/" % (self.calendar_id,)
+        else:
+            return None
 
 mptt.register(Category)
 
@@ -84,12 +93,15 @@ class Article(Base):
                 'slug': self.slug,
                 })
 
+    @property
+    def is_active(self):
+        return Article.objects.active().filter(pk=self.pk).count() > 0
+
 Article.register_regions(
     ('main', 'Main region'),
     )
 Article.create_content_type(RichTextContent)
 Article.create_content_type(MediaFileContent, POSITION_CHOICES=(('default', _('Default')),))
-
 
 if DJANGOCAL_SYNC:
     class ArticleCalendarAdapter(CalendarAdapter):
@@ -102,11 +114,17 @@ if DJANGOCAL_SYNC:
             Returns a CalendarEventData object filled with data from the adaptee.
             """
 
+            content = instance.summary
+            if instance.content.main:
+                content += '<p><a href="%s%s">Event home page</a></p>' % (Site.objects.get_current().domain, instance.get_absolute_url(),)
+
+            print content
+
             return CalendarEventData(
                 start=instance.publication_date,
                 end=instance.publication_end_date or instance.publication_date,
                 title=instance.title,
-                content=instance.summary
+                content=content
             )
 
         def get_feed_url(self, instance):
@@ -116,7 +134,7 @@ if DJANGOCAL_SYNC:
                 return None
 
         def can_save(self, instance):
-            return self.get_feed_url(instance) is not None
+            return self.get_feed_url(instance) is not None and instance.is_active
 
         def can_delete(self, instance):
             return self.get_feed_url(instance) is not None

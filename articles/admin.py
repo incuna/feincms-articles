@@ -4,12 +4,6 @@ from incunafein.admin import editor
 from models import DJANGOCAL_SYNC, Article, Category
 from django.conf import settings
 
-#class ArticleForm(forms.ModelForm):
-#    category = forms.ModelChoiceField(queryset=Category.objects.filter(parent__isnull=False))
-
-#    class Meta:
-#        models = Article
-
 class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     date_hierarchy = 'publication_date'
     list_display = ('__unicode__', 'category', 'publication_date', 'publication_end_date',)
@@ -21,7 +15,6 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
 
     show_on_top = ('title', 'category', 'tags')
     raw_id_fields = []
-    #form = ArticleForm
     
 
 class CategoryAdmin(editor.TreeEditor):
@@ -33,10 +26,9 @@ class CategoryAdmin(editor.TreeEditor):
     if DJANGOCAL_SYNC:
         fieldsets = (
             (None, {
-                'fields': ('name', 'slug', 'parent', 'calendar_feed', )
+                'fields': ('name', 'slug', 'parent', 'calendar_id', )
             }),
         )
-        
  
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)

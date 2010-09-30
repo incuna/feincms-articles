@@ -6,10 +6,6 @@ from articles.models import Article, Category
 
 register = template.Library()
 
-# regex used to extract the calendar user from the feed url 
-# (e.g. https://www.google.com/calendar/feeds/username@gmail.com/private-abcdefg/full/ > username@gmail.com)
-re_calendar = re.compile(r""".*/([^@%]*(@|%40)[^/]*).*""") 
-
 @register.inclusion_tag('articles/categories.html')
 def categories(selected=None, current=None):
     categories = None
@@ -116,9 +112,9 @@ class CalendarNode(template.Node):
                 return ''
 
         categories = []
-        if category.calendar_feed:
+        if category.calendar_id:
             categories.append(category)
-        categories.extend(list(category.get_ancestors().filter(calendar_feed__isnull=False)))
+        categories.extend(list(category.get_ancestors().filter(calendar_id__isnull=False)))
 
         if not categories:
             return ''
@@ -136,9 +132,7 @@ class CalendarNode(template.Node):
         coulours = self.coulours()
         src = "https://www.google.com/calendar/embed?%s" % ( '&'.join(["%s=%s" % pair for pair in src_attrs.items()]) )
         for c in categories:
-            m = re_calendar.match(c.calendar_feed)
-            if m:
-                src += "&src=%s&color=%%23%s" % (m.group(1), coulours.next())
+            src += "&src=%s&color=%%23%s" % (c.calendar_id, coulours.next())
 
         final_attrs['src'] = src
 
