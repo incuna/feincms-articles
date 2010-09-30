@@ -25,7 +25,7 @@ class ArticleCalendarFkeyContent(BaseFkeyContent):
         cls.add_to_class(cls.fkey_name or cls.object_name.lower(),
                          models.ForeignKey('%s.%s' % (cls.app_label, cls.object_name),
                                            related_name='%s_%s_set' % (cls._meta.app_label, cls._meta.module_name),
-                                           limit_choices_to = {'calendar_feed__isnull': False}
+                                           limit_choices_to = {'calendar_id__isnull': False}
 
         ))
 
