@@ -32,7 +32,7 @@ def article_category(request, category_url=None, extra_context=None):
         category = get_object_or_404(Category, local_url=category_url)
         articles = Article.objects.active().filter(category=category)
     else:
-        articles = Article.objects.none()
+        articles = Article.objects.active()
         category = None
 
     tags = Tag.objects.usage_for_queryset(articles)
