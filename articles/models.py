@@ -18,7 +18,6 @@ except ImportError:
 
 
 from feincms.models import Base
-from feincms.management.checker import check_database_schema
 from feincms.content.medialibrary.models import MediaFileContent
 from feincms.content.richtext.models import RichTextContent
 
