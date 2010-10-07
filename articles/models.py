@@ -74,6 +74,7 @@ class Article(Base):
     publication_end_date = models.DateTimeField(_('Publication end date'), null=True, blank=True,)
     category = models.ForeignKey(Category)
     tags = TagField(null=True, blank=True)
+    thumbnail = models.ImageField(max_length=250, upload_to="articles/thumbnails", null=True, blank=True)
 
     class Meta:
         ordering = ('-publication_date',)

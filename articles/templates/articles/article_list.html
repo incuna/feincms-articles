@@ -38,6 +38,7 @@
     <div class="article short">
         <div class="date"><span class="month">{{ article.publication_date|date:"M" }}</span> <span class="day">{{ article.publication_date|date:"j" }}</span> <span class="year">{{ article.publication_date|date:"Y" }}</span></div>
         <div class="summary">
+            {% if article.thumbnail %}<a class="thumbnail" href="{{article.get_absolute_url }}"><img src="{{ article.thumbnail.url }}" alt="{{ article }}" /></a>{% endif %}
             <h3><a href="{{article.get_absolute_url }}">{{ article }}</a></h3>
             <p>{{ article.summary }}</p>
         </div>
