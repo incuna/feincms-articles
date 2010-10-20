@@ -185,7 +185,7 @@ class ArticlesNode(template.Node):
         limit = self.limit and self.limit.resolve(context)
 
 
-        articles = Article.objects.active()
+        articles = Article.objects.active().select_related()
 
         if isinstance(category, (str,unicode,)):
             try:
