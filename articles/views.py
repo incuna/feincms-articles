@@ -3,6 +3,8 @@ from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 from models import Article, Category
 from tagging.models import Tag, TaggedItem
+from django.conf import settings
+from django.http import HttpResponseRedirect
 
 
 def article_detail(request, category_url, slug, extra_context=None):
@@ -32,7 +34,13 @@ def article_category(request, category_url=None, extra_context=None):
         category = get_object_or_404(Category, local_url=category_url)
         articles = Article.objects.active().filter(category=category)
     else:
-        articles = Article.objects.active()
+        if getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
+            # Redirect to the first category
+            try:
+                return HttpResponseRedirect(Category.objects.all()[0].get_absolute_url())
+            except IndexError, e:
+                pass
+        articles = Article.objects.none()
         category = None
 
     tags = Tag.objects.usage_for_queryset(articles)
