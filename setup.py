@@ -3,7 +3,7 @@ setup(
     name = "articles",
     packages = ["articles", ],
     install_requires=[
-        "FeinCMS",
+        "feincms",
         "django-tagging",
         "django-mptt-2",
         "django-pagination",
