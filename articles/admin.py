@@ -13,9 +13,16 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
         'slug': ('title',),
         }
 
-    show_on_top = ('title', 'category', 'tags')
-    raw_id_fields = []
     filter_horizontal = ('access_groups',)
+    fieldsets = [
+        (None, {
+            'fields': ('title', 'slug', 'category', 'tags', 'summary', 'publication_date', 'publication_end_date', 'thumbnail'  )
+        }),
+        ('Permissions', {
+            'classes': ('collapse',),
+            'fields': ('access_groups',)
+        }),
+    ]
 
 class CategoryAdmin(editor.TreeEditor):
     list_display = ('__unicode__', )
