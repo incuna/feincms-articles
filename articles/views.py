@@ -31,9 +31,13 @@ def article_detail(request, category_url, slug, extra_context=None):
 def article_category(request, category_url=None, extra_context=None):
     context = RequestContext(request)
     
+    articles = Article.objects.active(user=request.user) 
     if category_url is not None:
         category = get_object_or_404(Category, local_url=category_url)
-        articles = Article.objects.active(user=request.user).filter(category=category)
+        if getattr(settings, 'ARTICLE_SHOW_DESCENDANTS', False):
+            articles = articles.filter(category__in=category.get_descendants(include_self=True)) 
+        else:
+            articles = articles.filter(category=category)
     else:
         if getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
             # Redirect to the first category
@@ -41,7 +45,6 @@ def article_category(request, category_url=None, extra_context=None):
                 return HttpResponseRedirect(Category.objects.all()[0].get_absolute_url())
             except IndexError, e:
                 pass
-        articles = Article.objects.none()
         category = None
 
     tags = Tag.objects.usage_for_queryset(articles)
