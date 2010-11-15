@@ -61,10 +61,19 @@ class Category(models.Model):
 mptt.register(Category)
 
 class ArticleManager(models.Manager):
-    def active(self):
+    def active(self, user=None):
         """Active component"""
-        return self.filter(Q(publication_date__lte=datetime.now()) & \
+        articles =  self.filter(Q(publication_date__lte=datetime.now()) & \
             (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=datetime.now())))
+
+        if user is not None and user.is_authenticated():
+            articles = articles.filter(Q(access_groups__isnull=True) | Q(access_groups__in=user.groups.all()))
+        else:
+            articles = articles.filter(access_groups__isnull=True)
+
+        return articles
+        
+
 
 class Article(Base): 
     title = models.CharField(max_length=255)
@@ -75,6 +84,9 @@ class Article(Base):
     category = models.ForeignKey(Category)
     tags = TagField(null=True, blank=True)
     thumbnail = models.ImageField(max_length=250, upload_to="articles/thumbnails", null=True, blank=True)
+
+    access_groups  = models.ManyToManyField("auth.Group", null=True, blank=True,
+                                            help_text='Users must be logged in and a member of the group(s) to access this article.', )
 
     class Meta:
         ordering = ('-publication_date',)

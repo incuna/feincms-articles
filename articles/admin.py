@@ -15,7 +15,7 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
 
     show_on_top = ('title', 'category', 'tags')
     raw_id_fields = []
-    
+    filter_horizontal = ('access_groups',)
 
 class CategoryAdmin(editor.TreeEditor):
     list_display = ('__unicode__', )

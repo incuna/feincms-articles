@@ -5,13 +5,14 @@ from models import Article, Category
 from tagging.models import Tag, TaggedItem
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 
 
 def article_detail(request, category_url, slug, extra_context=None):
 
     context = RequestContext(request)
 
-    article = get_object_or_404(Article.objects.active(), category__local_url=category_url, slug=slug)
+    article = get_object_or_404(Article.objects.active(user=request.user), category__local_url=category_url, slug=slug)
 
     tags = Tag.objects.usage_for_queryset(Article.objects.filter(category__in=article.category.get_descendants(include_self=True)))
 
@@ -32,7 +33,7 @@ def article_category(request, category_url=None, extra_context=None):
     
     if category_url is not None:
         category = get_object_or_404(Category, local_url=category_url)
-        articles = Article.objects.active().filter(category=category)
+        articles = Article.objects.active(user=request.user).filter(category=category)
     else:
         if getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
             # Redirect to the first category

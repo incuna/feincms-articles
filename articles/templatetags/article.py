@@ -71,7 +71,7 @@ class CalendarNode(template.Node):
               ]
 
     @staticmethod
-    def coulours(start = 0):
+    def colours(start = 0):
         """
         Returns a stream of colours, if the end of the list is reached then it starts back at the beginning.
         """
@@ -129,10 +129,10 @@ class CalendarNode(template.Node):
         if attrs:
             final_attrs.update(attrs)
 
-        coulours = self.coulours()
+        colours = self.colours()
         src = "https://www.google.com/calendar/embed?%s" % ( '&'.join(["%s=%s" % pair for pair in src_attrs.items()]) )
         for c in categories:
-            src += "&src=%s&color=%%23%s" % (c.calendar_id, coulours.next())
+            src += "&src=%s&color=%%23%s" % (c.calendar_id, colours.next())
 
         final_attrs['src'] = src
 
@@ -184,8 +184,11 @@ class ArticlesNode(template.Node):
         category = self.category and self.category.resolve(context)
         limit = self.limit and self.limit.resolve(context)
 
+        user = None
+        if 'request' in context:
+            user = context['request'].user
 
-        articles = Article.objects.active().select_related()
+        articles = Article.objects.active(user=user).select_related()
 
         if isinstance(category, (str,unicode,)):
             try:
