@@ -35,9 +35,9 @@ def article_category(request, category_url=None, extra_context=None):
     if category_url is not None:
         category = get_object_or_404(Category, local_url=category_url)
         if getattr(settings, 'ARTICLE_SHOW_DESCENDANTS', False):
-            articles = articles.filter(category__in=category.get_descendants(include_self=True)) 
+            articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
         else:
-            articles = articles.filter(category=category)
+            articles = articles.filter(category=category).order_by(category.order_by)
     else:
         if getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
             # Redirect to the first category

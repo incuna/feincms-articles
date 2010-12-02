@@ -197,7 +197,7 @@ class ArticlesNode(template.Node):
                 category = None
 
         if category is not None:
-            articles = articles.filter(category__in=category.get_descendants(include_self=True))
+            articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
 
         if limit is not None:
             articles = articles[:limit]

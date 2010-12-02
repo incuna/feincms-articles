@@ -33,7 +33,7 @@ class CategoryAdmin(editor.TreeEditor):
     if DJANGOCAL_SYNC:
         fieldsets = (
             (None, {
-                'fields': ('name', 'slug', 'parent', 'calendar_id', )
+                'fields': ('name', 'slug', 'parent', 'calendar_id', 'order_by')
             }),
         )
  

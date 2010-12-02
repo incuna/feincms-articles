@@ -23,12 +23,22 @@ from feincms.content.richtext.models import RichTextContent
 
 import mptt
 
+
+ORDER_BY_CHOICES = (
+    ('publication_date', 'Publication date Ascending'),
+    ('-publication_date', 'Publication date Descending'),
+    ('title', 'Titlle A-Z'),
+    ('-title', 'Titlle Z-A'),
+)
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
     calendar_id = models.EmailField('calendar id', max_length=255, blank=True, null=True, 
                                     help_text='Google Calendar Id e.g. username@gmail.com')
+    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order pronciple of items in this category.', default='publication_date')
+
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
     @depend_on_related('self',type='forward')
