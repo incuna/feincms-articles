@@ -26,16 +26,15 @@ class CategoriesNode(template.Node):
         user = 'request' in context and context['request'].user or None
         categories = None
         if current is None:
-            categories = Category.objects.filter(parent__isnull=True)
+            categories = Category.objects.active(user=user).filter(parent__isnull=True)
         else:
             if selected is not None:
                 # is the selected category a descendant of 
                 if current.get_descendants(include_self=True).filter(pk=selected.pk).count() > 0:
-                    categories = current.children.all()
-
+                    categories = current.children.filter(Category.objects.active_query(user=user))
 
         if categories is not None:
-            categories = categories.filter(article__in=Article.objects.active(user=user), article__isnull=False).distinct()
+            categories = categories.distinct()
 
         t = template.loader.select_template(['articles/categories.html'])
         context.push()

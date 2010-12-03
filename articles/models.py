@@ -31,6 +31,27 @@ ORDER_BY_CHOICES = (
     ('-title', 'Title Z-A'),
 )
 
+
+class CategoryManager(models.Manager):
+
+    def active_query(self, user=None):
+        now = datetime.now()
+        query = (Q(article__publication_date__lte=now) & \
+                  (Q(article__publication_end_date__isnull=True) | Q(article__publication_end_date__gt=now)))
+
+        if user is not None and user.is_authenticated():
+            query = query & (Q(article__access_groups__isnull=True) | Q(article__access_groups__in=user.groups.all()))
+        else:
+            query = query & Q(article__access_groups__isnull=True)
+
+        return query
+        
+
+    def active(self, user=None):
+        """Active categories (containing active articles)"""
+
+        return self.filter(self.active_query(user=user)).distinct()
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
@@ -38,6 +59,8 @@ class Category(models.Model):
     calendar_id = models.EmailField('calendar id', max_length=255, blank=True, null=True, 
                                     help_text='Google Calendar Id e.g. username@gmail.com')
     order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order of article items in this category.', default='-publication_date')
+
+    objects = CategoryManager()
 
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
@@ -71,18 +94,23 @@ class Category(models.Model):
 mptt.register(Category)
 
 class ArticleManager(models.Manager):
-    def active(self, user=None):
-        """Active component"""
+    def active_query(self, user=None):
 
-        articles =  self.filter(Q(publication_date__lte=datetime.now()) & \
-            (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=datetime.now())))
+        now = datetime.now()
+        query =  (Q(publication_date__lte=now) & \
+                  (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=now)))
 
         if user is not None and user.is_authenticated():
-            articles = articles.filter(Q(access_groups__isnull=True) | Q(access_groups__in=user.groups.all()))
+            query = query & (Q(access_groups__isnull=True) | Q(access_groups__in=user.groups.all()))
         else:
-            articles = articles.filter(access_groups__isnull=True)
+            query = query & Q(access_groups__isnull=True)
 
-        return articles
+        return query
+
+    def active(self, user=None):
+        """Active articles"""
+
+        return self.filter(self.active_query(user=user))
         
 
 

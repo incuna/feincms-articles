@@ -33,7 +33,7 @@ def article_category(request, category_url=None, extra_context=None):
     
     articles = Article.objects.active(user=request.user) 
     if category_url is not None:
-        category = get_object_or_404(Category, local_url=category_url)
+        category = get_object_or_404(Category.objects.active(user=request.user), local_url=category_url)
         if getattr(settings, 'ARTICLE_SHOW_DESCENDANTS', False):
             articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
         else:
@@ -42,7 +42,7 @@ def article_category(request, category_url=None, extra_context=None):
         if getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
             # Redirect to the first category
             try:
-                return HttpResponseRedirect(Category.objects.all()[0].get_absolute_url())
+                return HttpResponseRedirect(Category.objects.active(user=request.user)[0].get_absolute_url())
             except IndexError, e:
                 pass
         category = None
