@@ -73,6 +73,7 @@ mptt.register(Category)
 class ArticleManager(models.Manager):
     def active(self, user=None):
         """Active component"""
+
         articles =  self.filter(Q(publication_date__lte=datetime.now()) & \
             (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=datetime.now())))
 

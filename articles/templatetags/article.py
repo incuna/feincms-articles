@@ -4,22 +4,149 @@ from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 from articles.models import Article, Category
 
+from incuna.template.defaulttags import parse_tokens
+
 register = template.Library()
 
-@register.inclusion_tag('articles/categories.html')
-def categories(selected=None, current=None):
-    categories = None
-    if current is None:
-        categories = Category.objects.filter(parent__isnull=True)
-    else:
-        if selected is not None:
-            # is the selected category a descebdant of 
-            if current.get_descendants(include_self=True).filter(pk=selected.pk).count() > 0:
-                categories = current.children.all()
+#@register.inclusion_tag('articles/categories.html')
+#def categories(selected=None, current=None):
+#    categories = None
+#    if current is None:
+#        categories = Category.objects.filter(parent__isnull=True)
+#    else:
+#        if selected is not None:
+#            # is the selected category a descendant of 
+#            if current.get_descendants(include_self=True).filter(pk=selected.pk).count() > 0:
+#                categories = current.children.all()
 
-    return {'selected': selected,
-            'categories': categories,
-           }
+#    if categories is not None:
+#        categories = categories.filter(article__isnull=False).distinct()
+
+#    return {'selected': selected,
+#            'categories': categories,
+#           }
+
+class CategoriesNode(template.Node):
+    """
+        Output a list of categories.
+
+        Usage:
+            {% categories %}
+    """
+    def __init__(self, selected=None, current=None):
+        self.selected = selected
+        self.current = current
+
+    def render(self, context):
+        selected = self.selected and self.selected.resolve(context)
+        current = self.current and self.current.resolve(context)
+
+        user = 'request' in context and context['request'].user or None
+        categories = None
+        if current is None:
+            categories = Category.objects.filter(parent__isnull=True)
+        else:
+            if selected is not None:
+                # is the selected category a descendant of 
+                if current.get_descendants(include_self=True).filter(pk=selected.pk).count() > 0:
+                    categories = current.children.all()
+
+
+        if categories is not None:
+            categories = categories.filter(article__in=Article.objects.active(user=user), article__isnull=False).distinct()
+
+        t = template.loader.select_template(['articles/categories.html'])
+        context.push()
+        context['selected'] = selected
+        context['categories'] = categories
+        output = t.render(context)
+        context.pop()
+
+        return output
+
+
+@register.tag()
+def categories(parser, token):
+    bits = token.split_contents() 
+
+    args, kwargs = parse_tokens(parser, bits)
+
+    return CategoriesNode(*args, **kwargs)
+
+
+class ArticlesNode(template.Node):
+    """
+        Output a list of articles.
+        If as varname is specified then add the result to the context.
+
+        Usage:
+            {% articles %}
+            OR
+            {% articles category %}
+            OR
+            {% articles category limit %}
+            OR
+            {% articles as artilce_list %}
+            OR
+            {% articles category as artilce_list %}
+            OR
+            {% articles category limit as artilce_list %}
+    """
+    def __init__(self, category=None, limit=None, varname=None):
+        self.category = category
+        self.limit = limit
+        self.varname = varname
+
+    def render(self, context):
+        category = self.category and self.category.resolve(context)
+        limit = self.limit and self.limit.resolve(context)
+
+        user = None
+        if 'request' in context:
+            user = context['request'].user
+
+        articles = Article.objects.active(user=user).select_related()
+
+        if isinstance(category, (str,unicode,)):
+            try:
+                category = Category.objects.get(slug=category)
+            except Category.DoesNotExist:
+                category = None
+
+        if category is not None:
+            articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
+
+        if limit is not None:
+            articles = articles[:limit]
+
+
+        if self.varname is not None:
+            context[self.varname] = articles
+            return ''
+        else:
+            t = template.loader.select_template(['articles/articles.html'])
+            context.push()
+            context['category'] = category
+            context['articles'] = articles
+            output = t.render(context)
+            context.pop()
+
+            return output
+
+
+@register.tag()
+def articles(parser, token):
+    bits = token.split_contents() 
+
+    if bits[-2] == 'as':
+        varname = bits[-1]
+        args = bits[1:-2]
+    else:
+        args = bits[1:]
+        varname = None
+
+    return ArticlesNode(*map(parser.compile_filter, args), varname=varname)
+
 
 class CalendarNode(template.Node):
     """
@@ -155,79 +282,5 @@ def calendar(parser, token):
         raise template.TemplateSyntaxError('Bad arguments for tag "%s"' % bits[0])
 
     return CalendarNode(category, dict)
-
-
-class ArticlesNode(template.Node):
-    """
-        Output a list of articles.
-        If as varname is specified then add the result to the context.
-
-        Usage:
-            {% articles %}
-            OR
-            {% articles category %}
-            OR
-            {% articles category limit %}
-            OR
-            {% articles as artilce_list %}
-            OR
-            {% articles category as artilce_list %}
-            OR
-            {% articles category limit as artilce_list %}
-    """
-    def __init__(self, category=None, limit=None, varname=None):
-        self.category = category
-        self.limit = limit
-        self.varname = varname
-
-    def render(self, context):
-        category = self.category and self.category.resolve(context)
-        limit = self.limit and self.limit.resolve(context)
-
-        user = None
-        if 'request' in context:
-            user = context['request'].user
-
-        articles = Article.objects.active(user=user).select_related()
-
-        if isinstance(category, (str,unicode,)):
-            try:
-                category = Category.objects.get(slug=category)
-            except Category.DoesNotExist:
-                category = None
-
-        if category is not None:
-            articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
-
-        if limit is not None:
-            articles = articles[:limit]
-
-
-        if self.varname is not None:
-            context[self.varname] = articles
-            return ''
-        else:
-            t = template.loader.select_template(['articles/articles.html'])
-            context.push()
-            context['category'] = category
-            context['articles'] = articles
-            output = t.render(context)
-            context.pop()
-
-            return output
-
-
-@register.tag()
-def articles(parser, token):
-    bits = token.split_contents() 
-
-    if bits[-2] == 'as':
-        varname = bits[-1]
-        args = bits[1:-2]
-    else:
-        args = bits[1:]
-        varname = None
-
-    return ArticlesNode(*map(parser.compile_filter, args), varname=varname)
 
 
