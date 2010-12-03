@@ -25,10 +25,10 @@ import mptt
 
 
 ORDER_BY_CHOICES = (
-    ('publication_date', 'Publication date Ascending'),
-    ('-publication_date', 'Publication date Descending'),
-    ('title', 'Titlle A-Z'),
-    ('-title', 'Titlle Z-A'),
+    ('publication_date', 'Publication date (oldest first)'),
+    ('-publication_date', 'Publication date (newest first)'),
+    ('title', 'Title A-Z'),
+    ('-title', 'Title Z-A'),
 )
 
 class Category(models.Model):
@@ -37,7 +37,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
     calendar_id = models.EmailField('calendar id', max_length=255, blank=True, null=True, 
                                     help_text='Google Calendar Id e.g. username@gmail.com')
-    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order pronciple of items in this category.', default='publication_date')
+    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order of article items in this category.', default='-publication_date')
 
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
@@ -101,6 +101,7 @@ class Article(Base):
     class Meta:
         ordering = ('-publication_date',)
         get_latest_by = 'publication_date'
+        unique_together = (('category', 'slug'),)
 
     objects = ArticleManager()
 

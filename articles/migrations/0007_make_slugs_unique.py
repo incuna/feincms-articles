@@ -1,21 +1,37 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        
-        # Adding field 'Category.order_by'
-        db.add_column('articles_category', 'order_by', self.gf('django.db.models.fields.CharField')(default='-publication_date', max_length=30), keep_default=False)
+        "Write your forwards methods here."
 
+        for i in orm['articles.article'].objects.all():
+                value = i.slug
+                root = value
+                def check_slug():
+                    if orm['articles.article'].objects.exclude(pk=i.pk).filter(slug=value,category=i.category).count() > 0:
+                        return True
+                    return False
+
+                counter = 1
+                while check_slug():
+                    value = slugify("%s-%s" % (root, counter))
+                    counter += 1
+
+                i.slug = value
+
+                #print type(i._meta.get_field('slug'))
+                #i._meta.get_field('slug').unique = True
+                if root != value:
+                    print "%s: %s > %s" % (i.category, root, value)
+                i.save()
 
     def backwards(self, orm):
-        
-        # Deleting field 'Category.order_by'
-        db.delete_column('articles_category', 'order_by')
+        "Write your backwards methods here."
 
 
     models = {

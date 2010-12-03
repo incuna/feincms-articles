@@ -16,7 +16,7 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     filter_horizontal = ('access_groups',)
     fieldsets = [
         (None, {
-            'fields': ('title', 'slug', 'category', 'tags', 'summary', 'publication_date', 'publication_end_date', 'thumbnail'  )
+            'fields': ('title', 'slug', 'category', 'tags', 'summary', 'publication_date', 'publication_end_date', 'thumbnail' )
         }),
         ('Permissions', {
             'classes': ('collapse',),
@@ -25,7 +25,7 @@ class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     ]
 
 class CategoryAdmin(editor.TreeEditor):
-    list_display = ('__unicode__', )
+    list_display = ('__unicode__', 'order_by', )
     list_filter = ('parent',)
     prepopulated_fields = {
         'slug': ('name',),

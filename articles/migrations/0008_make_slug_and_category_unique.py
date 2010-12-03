@@ -8,19 +8,19 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding field 'Category.order_by'
-        db.add_column('articles_category', 'order_by', self.gf('django.db.models.fields.CharField')(default='-publication_date', max_length=30), keep_default=False)
+        # Adding unique constraint on 'Article', fields ['category', 'slug']
+        db.create_unique('articles_article', ['category_id', 'slug'])
 
 
     def backwards(self, orm):
         
-        # Deleting field 'Category.order_by'
-        db.delete_column('articles_category', 'order_by')
+        # Removing unique constraint on 'Article', fields ['category', 'slug']
+        db.delete_unique('articles_article', ['category_id', 'slug'])
 
 
     models = {
         'articles.article': {
-            'Meta': {'ordering': "('-publication_date',)", 'object_name': 'Article'},
+            'Meta': {'ordering': "('-publication_date',)", 'unique_together': "(('category', 'slug'),)", 'object_name': 'Article'},
             'access_groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['auth.Group']", 'null': 'True', 'blank': 'True'}),
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['articles.Category']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
