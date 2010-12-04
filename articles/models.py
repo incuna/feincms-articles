@@ -110,7 +110,7 @@ class ArticleManager(models.Manager):
     def active(self, user=None):
         """Active articles"""
 
-        return self.filter(self.active_query(user=user))
+        return self.filter(self.active_query(user=user)).distinct()
         
 
 
