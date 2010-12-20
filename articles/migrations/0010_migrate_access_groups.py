@@ -34,7 +34,7 @@ class Migration(DataMigration):
 
 
         for c in orm['articles.category'].objects.all():
-            groups = orm['auth.group'].objects.filter(article__in=c.article_set.all())distinct()
+            groups = orm['auth.group'].objects.filter(article__in=c.article_set.all()).distinct()
             #groups = orm['auth.group'].objects.filter(article__in=orm['articles.article'].objects.filter(
             #    category__in=c.objects.filter(tree_id=c.tree_id, lft__range=(c.lft, c.rght))))distinct()
             if groups:
