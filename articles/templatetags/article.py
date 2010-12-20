@@ -88,11 +88,11 @@ class ArticlesNode(template.Node):
 
         articles = Article.objects.active(user=user).select_related()
 
-        if isinstance(category, (str,unicode,)):
+        if category and isinstance(category, (str,unicode,)):
             try:
                 category = Category.objects.get(slug=category)
             except Category.DoesNotExist:
-                category = None
+                return ''
 
         if category is not None:
             articles = articles.filter(category__in=category.get_descendants(include_self=True)).order_by(category.order_by)
