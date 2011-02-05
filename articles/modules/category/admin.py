@@ -9,16 +9,16 @@ class CategoryAdmin(editor.TreeEditor):
     prepopulated_fields = {
         'slug': ('name',),
         }
-    if DJANGOCAL_SYNC:
-        fieldsets = (
-            (None, {
-                'fields': ('name', 'slug', 'parent', 'calendar_id', 'order_by')
-            }),
-            ('Permissions', {
-                'classes': ('collapse',),
-                'fields': ('access_groups',)
-            }),
-        )
+    #if DJANGOCAL_SYNC:
+    #    fieldsets = (
+    #        (None, {
+    #            'fields': ('name', 'slug', 'parent', 'calendar_id', 'order_by')
+    #        }),
+    #        ('Permissions', {
+    #            'classes': ('collapse',),
+    #            'fields': ('access_groups',)
+    #        }),
+    #    )
  
 admin.site.register(Category, CategoryAdmin)
 

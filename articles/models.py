@@ -33,14 +33,14 @@ class ArticleManager(models.Manager):
 
 
 class Article(Base): 
-    active = models.BooleanField(_('active'), default=False)
+    active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255,populate_from="title",help_text='This will be automatically generated from the name',unique=True,editable=True)
     summary = models.TextField(null=True, blank=True)
 
     class Meta:
-        ordering = []
+        ordering = ['title', ]
         unique_together = []
 
     objects = ArticleManager()

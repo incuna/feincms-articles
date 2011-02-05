@@ -1,8 +1,10 @@
 import mptt
 from datetime import datetime
 from django.db import models
+from django.db.models import Q
 from denorm import denormalized, depend_on_related
 from incuna.db.models import AutoSlugField
+from articles.models import Article
 
 class CategoryManager(models.Manager):
 

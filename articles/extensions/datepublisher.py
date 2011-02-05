@@ -7,7 +7,20 @@ from datetime import datetime
 
 from django.db import models
 from django.db.models import Q
+from django.conf import settings
+from django.utils.dateformat import format
 from django.utils.translation import ugettext_lazy as _
+
+def format_date(d, if_none=''):
+    """
+    Format a date in a nice human readable way: Omit the year if it's the current
+    year. Also return a default value if no date is passed in.
+    """
+
+    if d is None: return if_none
+
+    fmt = settings.SHORT_DATETIME_FORMAT
+    return format(d, fmt)
 
 
 def register(cls, admin_cls):
@@ -37,10 +50,16 @@ def register(cls, admin_cls):
         admin_cls.date_hierarchy = 'publication_date'
 
         if admin_cls.fieldsets:
-            admin_cls.fieldsets.append((_('Publication dates'), {
-                    'fields': ['publication_date', 'publication_end_date'],
-                    'classes': ('collapse',),
-                }))
+            #admin_cls.fieldsets.append((_('Publication dates'), {
+            #        'fields': ['publication_date', 'publication_end_date'],
+            #        'classes': ('collapse',),
+            #    }))
 
 
+            fields = admin_cls.fieldsets[0][1]['fields']
+            try:
+                at = fields.index('summary')
+            except ValueError:
+                at = len(fields)
+            fields[at:at] = ['publication_date', 'publication_end_date']
 

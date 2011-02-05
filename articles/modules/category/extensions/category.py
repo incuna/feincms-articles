@@ -32,8 +32,8 @@ def register(cls, admin_cls):
         if admin_cls.fieldsets:
             fields = admin_cls.fieldsets[0][1]['fields']
             try:
-                at = fields.index('slug')
+                at = fields.index('title')
             except ValueError:
                 at = len(fields)
-            fields.insert(at, 'title')
+            fields.insert(at, 'category')
 
