@@ -1,0 +1,1 @@
+recursive-include articles/templates *.html
