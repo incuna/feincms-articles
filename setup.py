@@ -5,7 +5,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "FeinCMS",
-        "django-tagging",
+        "django-taggit",
         "django-mptt",
         "django-pagination",
         #"django-denorm",

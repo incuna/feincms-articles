@@ -1,11 +1,15 @@
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.conf.urls.defaults import patterns, include
 
 def register(cls, admin_cls):
-    cls.add_to_class('category', models.ForeignKey('articles.Category'))
+    cls.add_to_class('category', models.ForeignKey('articles.Category', verbose_name=_('category')))
 
     cls._meta.unique_together += [('category', 'slug')]
+
+    cls.urlpatterns = patterns('', (r'^categories/', include('articles.modules.category.urls')),) + cls.urlpatterns
+    
 
     def get_absolute_url(self):
         return ('article_detail', (), {

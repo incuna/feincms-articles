@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from articles.views import article_detail as article_article_detail
 from articles.models import Article
 from models import Category
-from tagging.models import Tag, TaggedItem
+#from tagging.models import Tag, TaggedItem
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
@@ -36,21 +36,21 @@ def article_category(request, category_url=None, extra_context=None):
                 pass
         category = None
 
-    tag = None
-    if request.GET and 'tag' in request.GET:
-        try:
-            tag = Tag.objects.get(name=request.GET['tag'])
-        except Tag.DoesNotExist:
-            pass
-        else:
-            articles = TaggedItem.objects.get_union_by_model(articles, [tag])
+    #tag = None
+    #if request.GET and 'tag' in request.GET:
+    #    try:
+    #        tag = Tag.objects.get(name=request.GET['tag'])
+    #    except Tag.DoesNotExist:
+    #        pass
+    #    else:
+    #        articles = TaggedItem.objects.get_union_by_model(articles, [tag])
 
     if extra_context is not None:
         contect.update(extra_context)
 
     context.update({
         'object_list': articles,
-        'tag': tag,
+        #'tag': tag,
         'category': category,
     })
     

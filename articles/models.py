@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
 from django.core.exceptions import ImproperlyConfigured
+from django.conf.urls.defaults import patterns, url#, include
 from incuna.db.models import AutoSlugField
 from incunafein.admin import editor
 
@@ -45,6 +46,10 @@ class Article(Base):
 
     objects = ArticleManager()
 
+    urlpatterns = patterns('articles.views',
+                           url(r'^(?P<article>[a-z0-9_-]+).html$', 'article_detail', name="article_detail"),
+                           url(r'^$', 'article_list', name='article_index'),
+                          )
     @classmethod
     def remove_field(cls, f_name):
         # Removes the field form local fields list
@@ -83,8 +88,21 @@ class Article(Base):
                 cls.register_extension(fn)
                 cls._article_extensions.add(ext)
             except Exception, e:
-                raise ImproperlyConfigured("%s.register_extensions('%s') raised an '%s' exception" %
-                                            (cls.__name__, ext, e.message))
+                raise ImproperlyConfigured("%s.register_extensions('%s') raised an exception - '%s'" %
+                                            (cls.__name__, ext, e))
+
+
+    @classmethod
+    def get_urls(cls):
+        #final_urls = patterns()
+        #for urlpattern in cls.urlpatterns:
+        #    if callable(urlpattern):
+        #        final_urls += urlpattern()
+        #    else:
+        #        final_urls += urlpattern
+
+        #return final_urls
+        return cls.urlpatterns
 
     def __unicode__(self):
         return u"%s" % (self.title)

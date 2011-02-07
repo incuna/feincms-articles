@@ -59,6 +59,14 @@ class ArticlesNode(template.Node):
 def articles(parser, token):
     bits = token.split_contents() 
 
+    varname = None
+    try:
+        if bits[-2] == 'as':
+            varname = bits[-1]
+            bits = bits[:-2]
+    except IndexError:
+        pass
+
     args, kwargs = parse_tokens(parser, bits)
     if varname is not None:
         kwargs['varname'] = varname
