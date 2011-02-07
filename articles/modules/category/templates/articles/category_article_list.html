@@ -1,0 +1,15 @@
+{% extends "articles/article_list.html" %}
+
+{% load i18n articlecategory %}
+
+{% block article-title %}
+{% if category %}<h2>{{ category }}</h2>{% else %}{{ block.super }}{% endif %}
+{% endblock %}
+
+{% block article-aside %}
+    <h3>{% trans 'Categories' %}</h3>
+    <div class="sublinks">
+    {% articlecategories category %}
+    </div>
+{% endblock %}
+

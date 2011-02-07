@@ -5,7 +5,7 @@ from models import Article
 
 
 
-def article_detail(request, article, extra_context=None):
+def article_detail(request, article, template='articles/article_detail.html', extra_context=None):
 
     context = RequestContext(request)
 
@@ -23,10 +23,10 @@ def article_detail(request, article, extra_context=None):
         #'tags': tags,
     })
     
-    return render_to_response('articles/article_detail.html', context)
+    return render_to_response(template, context)
 
 
-def article_list(request, extra_context=None):
+def article_list(request, template='articles/article_list.html', extra_context=None):
     context = RequestContext(request)
     
     articles = Article.objects.active(user=request.user) 
@@ -51,5 +51,5 @@ def article_list(request, extra_context=None):
         #'category': category,
     })
     
-    return render_to_response('articles/article_list.html', context)
+    return render_to_response(template, context)
 

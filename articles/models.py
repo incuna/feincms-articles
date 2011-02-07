@@ -89,12 +89,9 @@ class Article(Base):
     def __unicode__(self):
         return u"%s" % (self.title)
 
-    #@models.permalink
-    #def get_absolute_url(self):
-    #    return ('article_detail', (), {
-    #            'category_url': self.category.local_url,
-    #            'slug': self.slug,
-    #            })
+    @models.permalink
+    def get_absolute_url(self):
+        return ('article_detail', (), { 'article': self.slug, })
 
     @property
     def is_active(self):
@@ -104,7 +101,7 @@ class Article(Base):
 class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
-    search_fields = ('title', 'slug',)
+    search_fields = ['title', 'slug', 'summary']
     prepopulated_fields = {
         'slug': ('title',),
         }

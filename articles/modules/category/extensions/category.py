@@ -10,7 +10,7 @@ def register(cls, admin_cls):
     def get_absolute_url(self):
         return ('article_detail', (), {
                 'category_url': self.category.local_url,
-                'slug': self.slug,
+                'article': self.slug,
                 })
     cls.get_absolute_url = models.permalink(get_absolute_url)
 

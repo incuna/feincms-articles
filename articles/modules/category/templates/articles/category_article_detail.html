@@ -1,0 +1,10 @@
+{% extends "articles/article_detail.html" %}
+
+{% load i18n articlecategory %}
+
+{% block article-aside %}
+    <h3>{% trans 'Categories' %}</h3>
+    <div class="sublinks">
+    {% articlecategories object.category %}
+    </div>
+{% endblock %}

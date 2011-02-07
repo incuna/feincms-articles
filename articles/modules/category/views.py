@@ -1,4 +1,3 @@
-# Create your views here. article_detail, article_category
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 from articles.views import article_detail as article_article_detail
@@ -15,7 +14,7 @@ def article_detail(request, category_url, article, extra_context=None):
 
     article = get_object_or_404(Article.objects.active(user=request.user), category__local_url=category_url, slug=article)
 
-    return article_article_detail(request, article, extra_context=extra_context)
+    return article_article_detail(request, article, template='articles/category_article_detail.html', extra_context=extra_context)
 
 
 def article_category(request, category_url=None, extra_context=None):
@@ -37,7 +36,6 @@ def article_category(request, category_url=None, extra_context=None):
                 pass
         category = None
 
-    tags = Tag.objects.usage_for_queryset(articles)
     tag = None
     if request.GET and 'tag' in request.GET:
         try:
@@ -52,11 +50,10 @@ def article_category(request, category_url=None, extra_context=None):
 
     context.update({
         'object_list': articles,
-        'tags': tags,
         'tag': tag,
         'category': category,
     })
     
-    return render_to_response('articles/article_list.html', context)
+    return render_to_response('articles/category_article_list.html', context)
 
 

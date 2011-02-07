@@ -1,53 +1,17 @@
 {% extends "articles/base.html" %}
 
-{% load i18n tagging_tags article feincms_tags feincms_page_tags tagging_tags %}
+{% load i18n feincms_tags %}
 
-{% block article-title %}{% endblock %}
+{% block article-title %}<h3>{{ object }}</h3>{% endblock %}
 
-{% block article-aside %}
+{% block article-aside %}{% endblock %}
 
-    <h3>{% trans 'Categories' %}</h3>
-    <div class="sublinks">
-    {% categories object.category %}
-    </div>
-
-    {% if tags %}
-    <div class="tags">
-        <h3>{% trans 'Tags' %}</h3>
-        <ul>
-        {% for atag in tags %}
-        <li><a class="tag{% ifequal atag tag %} selected{% endifequal %}" href="{{ object.category.get_absolute_url }}?tag={{ atag }}">{{ atag }}</a></li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    
-{% endblock %}
 
 {% block article-content %}
     <div class="article full">
         
-        <div class="date"><span class="month">{{ object.publication_date|date:"M" }}</span> <span class="day">{{ object.publication_date|date:"j" }}</span> <span class="year">{{ object.publication_date|date:"Y" }}</span></div>
-        
-        <div class="header">
-            <h3>{{ object }}</h3>
-            {% tags_for_object object as tags %}
-            {% if tags %}
-            <div class="tags">
-                <span class="label">Tagged:</span>
-                <ul>
-                {% for atag in tags %}
-                    <li><a href="{{ object.category.get_absolute_url }}?tag={{ atag }}">{{ atag }}</a></li>
-                {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-        </div>
-
         <div class="body">
-            {% for content in object.content.main %}
-                {% feincms_render_content content request %}
-            {% endfor %} 
+            {% feincms_render_region object 'main' request %}
         </div>
     </div>
 {% endblock %}

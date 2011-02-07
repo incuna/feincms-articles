@@ -9,14 +9,11 @@ from articles.models import Article
 class CategoryManager(models.Manager):
 
     def active_query(self, user=None):
-        now = datetime.now()
-        query = (Q(publication_date__lte=now) & \
-                  (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=now)))
 
         if user is not None and user.is_authenticated():
-            query = query & (Q(access_groups__isnull=True) | Q(access_groups__in=user.groups.all()))
+            query = Q(access_groups__isnull=True) | Q(access_groups__in=user.groups.all())
         else:
-            query = query & Q(access_groups__isnull=True)
+            query = Q(access_groups__isnull=True)
 
         return query
 
@@ -48,21 +45,6 @@ class Category(models.Model):
         else:
             root = ''
         return u'%s%s/' % (root, self.slug)
-
-    @denormalized(models.DateTimeField, editable=False, null=True, blank=True,)
-    @depend_on_related('self',type='forward')
-    def publication_date(self):
-       try:
-           return self.descendant_articles.annotate(models.Min('publication_date'))[0].publication_date__min 
-       except IndexError:
-           return None
-    @denormalized(models.DateTimeField, editable=False, null=True, blank=True,)
-    @depend_on_related('self',type='forward')
-    def publication_end_date(self):
-       try:
-           return self.descendant_articles.annotate(models.Min('publication_end_date'))[0].publication_end_date__min 
-       except IndexError:
-           return None
 
     @property
     def descendant_articles(self):

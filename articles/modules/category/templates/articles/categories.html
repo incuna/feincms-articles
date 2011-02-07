@@ -1,10 +1,10 @@
-{% load article %}
+{% load articlecategory %}
 {% if categories %}
 <ul>
     {% for category in categories %} 
     <li>
         <a{{ category|equals:selected|then:" class='current'" }} href="{{ category.get_absolute_url }}">{{ category }}</a>
-        {% categories selected category %}
+        {% articlecategories selected category %}
     </li>
 {% endfor %}
 </ul>
