@@ -3,10 +3,14 @@ from django.contrib.gis.db import models
 from django.contrib.gis import admin
 from django.utils.translation import ugettext_lazy as _
 
+
 def register(cls, admin_cls):
     cls.add_to_class('location', models.PointField(verbose_name=_('location'), null=True, blank=True))
 
-    cls.add_to_class('objects', models.GeoManager())
+    from articles.models import ArticleManager
+    class GeoArticleManager(ArticleManager, models.GeoManager):
+        pass
+    cls.add_to_class('objects', GeoArticleManager())
 
     if admin_cls:
         if not issubclass(admin_cls, admin.OSMGeoAdmin):

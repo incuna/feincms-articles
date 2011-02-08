@@ -122,6 +122,7 @@ class ArticleAdmin(editor.ItemEditor, ModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
     search_fields = ['title', 'slug', 'summary']
+    filter_horizontal = []
     prepopulated_fields = {
         'slug': ('title',),
         }
