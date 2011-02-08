@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
 from django.core.exceptions import ImproperlyConfigured
@@ -9,6 +9,8 @@ from incuna.db.models import AutoSlugField
 from incunafein.admin import editor
 
 from feincms.models import Base
+
+ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
 
 class ArticleManager(models.Manager):
 
@@ -116,7 +118,7 @@ class Article(Base):
         return Article.objects.active().filter(pk=self.pk).count() > 0
 
 
-class ArticleAdmin(editor.ItemEditor, admin.ModelAdmin):
+class ArticleAdmin(editor.ItemEditor, ModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
     search_fields = ['title', 'slug', 'summary']
