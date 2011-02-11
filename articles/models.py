@@ -7,7 +7,6 @@ from django.core.exceptions import ImproperlyConfigured
 from django.conf.urls.defaults import patterns, url#, include
 from incuna.db.models import AutoSlugField
 from incunafein.admin import editor
-
 from feincms.models import Base
 
 ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
@@ -17,9 +16,7 @@ class ArticleManager(models.Manager):
     # A list of filters which are used to determine whether a page is active or not.
     # Extended for example in the datepublisher extension (date-based publishing and
     # un-publishing of pages)
-    active_filters = [
-        Q(active=True),
-        ]
+    active_filters = [Q(active=True),]
 
     @classmethod
     def apply_active_filters(cls, queryset, user=None):
@@ -35,11 +32,13 @@ class ArticleManager(models.Manager):
         return self.apply_active_filters(self, user=user)
 
 
-class Article(Base): 
+class Article(Base):
     active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(max_length=255)
-    slug = AutoSlugField(max_length=255,populate_from="title",help_text='This will be automatically generated from the name',unique=True,editable=True)
+    slug = AutoSlugField(max_length=255, populate_from="title", help_text='This will be automatically generated from the name', unique=True, editable=True)
+
+
     summary = models.TextField(null=True, blank=True)
 
     class Meta:
