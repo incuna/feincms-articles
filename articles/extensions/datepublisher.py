@@ -50,12 +50,6 @@ def register(cls, admin_cls):
         admin_cls.date_hierarchy = 'publication_date'
 
         if admin_cls.fieldsets:
-            #admin_cls.fieldsets.append((_('Publication dates'), {
-            #        'fields': ['publication_date', 'publication_end_date'],
-            #        'classes': ('collapse',),
-            #    }))
-
-
             fields = admin_cls.fieldsets[0][1]['fields']
             try:
                 at = fields.index('summary')

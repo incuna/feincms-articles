@@ -1,0 +1,12 @@
+[
+  {
+    "pk": 3, 
+    "model": "articles.article", 
+    "fields": {
+      "title": "Publication date test", 
+      "summary": "A short summary.", 
+      "active": true, 
+      "slug": "publication-date-test"
+    }
+  }
+]
