@@ -10,7 +10,7 @@ def article_detail(request, article, template='articles/article_detail.html', ex
         article = get_object_or_404(Article.objects.active(user=request.user), slug=article)
 
     if extra_context is not None:
-        contect.update(extra_context)
+        context.update(extra_context)
 
     context.update({
         'object': article,
