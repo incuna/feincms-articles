@@ -29,7 +29,7 @@ def register(cls, admin_cls):
                                                                   help_text=_('Leave empty if the entry should stay active forever.')))
 
 
-    cls._meta.ordering += ['-publication_date',]
+    cls._meta.ordering.insert(0, '-publication_date')
     cls._meta.get_latest_by = 'publication_date'
 
     cls.objects.active_filters.append(
