@@ -1,1 +1,3 @@
-recursive-include articles/templates *.html
+recursive-include */templates *.html
+recursive-include */fixtures *.json
+

@@ -1,7 +1,7 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 setup(
     name = "django-articles",
-    packages = ["articles", ],
+    packages = find_packages(),
     include_package_data=True,
     install_requires=[
         "FeinCMS",
