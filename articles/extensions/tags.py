@@ -1,6 +1,11 @@
-from django.utils.translation import ugettext_lazy as _
 from django.conf.urls.defaults import patterns, url
-from taggit.managers import TaggableManager
+from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import ugettext_lazy as _
+
+try:
+    from taggit.managers import TaggableManager
+except ImportError:
+   raise ImproperlyConfigured('You need to install django-taggit to use the tags extension')
 
 def register(cls, admin_cls):
     cls.add_to_class('tags', TaggableManager(verbose_name=_('tags'), blank=True))
