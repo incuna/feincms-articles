@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
 from django.core.exceptions import ImproperlyConfigured
-from django.conf.urls.defaults import patterns, url#, include
+from django.conf.urls.defaults import patterns, url
 
 from feincms.admin import editor
 from feincms.models import Base
@@ -12,10 +12,6 @@ from feincms.utils.managers import ActiveAwareContentManagerMixin
 
 
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
-
-    # A list of filters which are used to determine whether a page is active or not.
-    # Extended for example in the datepublisher extension (date-based publishing and
-    # un-publishing of pages)
     active_filters = [Q(active=True),]
 
 
@@ -41,6 +37,7 @@ class Article(Base):
 
     @classmethod
     def remove_field(cls, f_name):
+        """Remove a field. Effectively inverse of contribute_to_class"""
         # Removes the field form local fields list
         cls._meta.local_fields = [f for f in cls._meta.local_fields if f.name != f_name]
 
@@ -50,6 +47,7 @@ class Article(Base):
 
     @classmethod
     def register_extension(cls, register_fn):
+        """Extended from FeinCMS base to add the Admin class."""
         register_fn(cls, ArticleAdmin)
 
     @classmethod
