@@ -37,7 +37,6 @@ class Article(Base):
     title = models.CharField(max_length=255)
     slug = AutoSlugField(max_length=255, populate_from="title", help_text='This will be automatically generated from the name', unique=True, editable=True)
 
-
     summary = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -127,10 +126,8 @@ class ArticleAdmin(editor.ItemEditor, ModelAdmin):
     prepopulated_fields = {
         'slug': ('title',),
         }
-
     fieldsets = [
         (None, {
             'fields': ['active', 'title', 'slug', 'summary', ]
         }),
     ]
-
