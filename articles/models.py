@@ -27,12 +27,12 @@ class Article(Base):
 
     objects = ArticleManager()
 
-    @property
-    def urlpatterns(self):
+    @classmethod
+    def get_urlpatterns(cls):
         import views
         return patterns('',
-            url(r'^$', views.ArticleList, name='article_index'),
-            url(r'^(?P<article>[a-z0-9_-]+)/$', views.ArticleDetail, name='article_detail'),
+            url(r'^$', views.ArticleList.as_view(), name='article_index'),
+            url(r'^(?P<slug>[a-z0-9_-]+)/$', views.ArticleDetail.as_view(), name='article_detail'),
         )
 
     @classmethod
@@ -52,7 +52,7 @@ class Article(Base):
 
     @classmethod
     def get_urls(cls):
-        return cls.urlpatterns
+        return cls.get_urlpatterns()
 
     def __unicode__(self):
         return u"%s" % (self.title)
