@@ -9,7 +9,6 @@ from incuna.db.models import AutoSlugField
 from incunafein.admin import editor
 from feincms.models import Base
 
-ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
 
 class ArticleManager(models.Manager):
 
@@ -115,6 +114,9 @@ class Article(Base):
     @property
     def is_active(self):
         return Article.objects.active().filter(pk=self.pk).count() > 0
+
+
+ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
 
 
 class ArticleAdmin(editor.ItemEditor, ModelAdmin):
