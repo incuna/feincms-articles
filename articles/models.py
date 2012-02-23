@@ -10,8 +10,6 @@ from feincms.admin import editor
 from feincms.models import Base
 from feincms.utils.managers import ActiveAwareContentManagerMixin
 
-from incuna.db.models import AutoSlugField
-
 
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
 
@@ -25,7 +23,7 @@ class Article(Base):
     active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(max_length=255)
-    slug = AutoSlugField(max_length=255, populate_from="title", help_text='This will be automatically generated from the name', unique=True, editable=True)
+    slug = models.SlugField(max_length=255, help_text='This will be automatically generated from the name', unique=True, editable=True)
 
     summary = models.TextField(null=True, blank=True)
 
