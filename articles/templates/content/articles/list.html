@@ -1,0 +1,9 @@
+{% load feincms_tags %}
+
+{% for object in object_list %}
+  <section class="news-block">
+    <h4>{{ object.title }}</h4>
+    {% feincms_render_region object 'summary' request %}
+    <p><a href="{{ object.get_absolute_url }}">More...</a></p>
+  </section>
+{% endfor %}
