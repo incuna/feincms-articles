@@ -81,7 +81,7 @@ class ArticleAdmin(editor.ItemEditor, ModelAdmin):
     filter_horizontal = []
     prepopulated_fields = {
         'slug': ('title',),
-        }
+    }
     fieldsets = [
         (None, {
             'fields': ['active', 'title', 'slug', 'summary', ]
