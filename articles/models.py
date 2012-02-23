@@ -93,14 +93,6 @@ class Article(Base):
 
     @classmethod
     def get_urls(cls):
-        #final_urls = patterns()
-        #for urlpattern in cls.urlpatterns:
-        #    if callable(urlpattern):
-        #        final_urls += urlpattern()
-        #    else:
-        #        final_urls += urlpattern
-
-        #return final_urls
         return cls.urlpatterns
 
     def __unicode__(self):
