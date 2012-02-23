@@ -1,5 +1,7 @@
 {{ object.title }}
-{{ object.summary }}
+{% for content in object.content.summary %}
+  {{ content.render|striptags }}
+{% endfor %}
 {% for content in object.content.main %}
   {{ content.render|striptags }}
 {% endfor %}

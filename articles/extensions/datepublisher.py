@@ -51,9 +51,4 @@ def register(cls, admin_cls):
 
         if admin_cls.fieldsets:
             fields = admin_cls.fieldsets[0][1]['fields']
-            try:
-                at = fields.index('summary')
-            except ValueError:
-                at = len(fields)
-            fields[at:at] = ['publication_date', 'publication_end_date']
-
+            fields += ['publication_date', 'publication_end_date']

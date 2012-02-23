@@ -1,6 +1,6 @@
 {% extends "articles/base.html" %}
 
-{% load i18n pagination_tags %}
+{% load feincms_tags i18n pagination_tags %}
 
 {% block article-title %}
     <h2>{% trans 'Articles' %}</h2>
@@ -13,7 +13,7 @@
     <div class="article short">
         <div class="summary">
             <h3><a href="{{article.get_absolute_url }}">{{ article }}</a></h3>
-            <p>{{ article.summary }}</p>
+            {% feincms_render_region object 'summary' request %}
         </div>
     </div>
     {% endfor %}

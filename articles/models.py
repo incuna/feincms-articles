@@ -25,8 +25,6 @@ class Article(Base):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, help_text='This will be automatically generated from the name', unique=True, editable=True)
 
-    summary = models.TextField(null=True, blank=True)
-
     class Meta:
         ordering = ['title', ]
         unique_together = []
@@ -76,13 +74,13 @@ ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.
 class ArticleAdmin(editor.ItemEditor, ModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
-    search_fields = ['title', 'slug', 'summary']
+    search_fields = ['title', 'slug']
     filter_horizontal = []
     prepopulated_fields = {
         'slug': ('title',),
     }
     fieldsets = [
         (None, {
-            'fields': ['active', 'title', 'slug', 'summary', ]
+            'fields': ['active', 'title', 'slug']
         }),
     ]
