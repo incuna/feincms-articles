@@ -12,8 +12,6 @@ from feincms.utils.managers import ActiveAwareContentManagerMixin
 
 from incuna.db.models import AutoSlugField
 
-import views
-
 
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
 
@@ -37,10 +35,13 @@ class Article(Base):
 
     objects = ArticleManager()
 
-    urlpatterns = patterns('',
-        url(r'^$', views.ArticleList, name='article_index'),
-        url(r'^(?P<article>[a-z0-9_-]+)/$', views.ArticleDetail, name='article_detail'),
-    )
+    @property
+    def urlpatterns(self):
+        import views
+        return patterns('',
+            url(r'^$', views.ArticleList, name='article_index'),
+            url(r'^(?P<article>[a-z0-9_-]+)/$', views.ArticleDetail, name='article_detail'),
+        )
 
     @classmethod
     def remove_field(cls, f_name):
