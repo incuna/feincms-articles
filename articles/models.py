@@ -5,30 +5,20 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
 from django.core.exceptions import ImproperlyConfigured
 from django.conf.urls.defaults import patterns, url#, include
-from incuna.db.models import AutoSlugField
-from incunafein.admin import editor
+
+from feincms.admin import editor
 from feincms.models import Base
+from feincms.utils.managers import ActiveAwareContentManagerMixin
+
+from incuna.db.models import AutoSlugField
 
 
-class ArticleManager(models.Manager):
+class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
 
     # A list of filters which are used to determine whether a page is active or not.
     # Extended for example in the datepublisher extension (date-based publishing and
     # un-publishing of pages)
     active_filters = [Q(active=True),]
-
-    @classmethod
-    def apply_active_filters(cls, queryset, user=None):
-        for filt in cls.active_filters:
-            if callable(filt):
-                queryset = filt(queryset, user)
-            else:
-                queryset = queryset.filter(filt)
-
-        return queryset
-
-    def active(self, user=None):
-        return self.apply_active_filters(self, user=user)
 
 
 class Article(Base):
