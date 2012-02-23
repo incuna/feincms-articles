@@ -1,35 +1,17 @@
-from django.template import RequestContext
-from django.shortcuts import get_object_or_404, render_to_response
+from django.views.generic import DetailView, ListView
+
 from models import Article
 
-def article_detail(request, article, template='articles/article_detail.html', extra_context=None):
 
-    context = RequestContext(request)
+class ArticleDetail(DetailView):
+    model = Article
 
-    if isinstance(article, basestring):
-        article = get_object_or_404(Article.objects.active(user=request.user), slug=article)
-
-    if extra_context is not None:
-        context.update(extra_context)
-
-    context.update({
-        'object': article,
-    })
-    
-    return render_to_response(template, context)
+    def get_queryset(self):
+        return Article.objects.active(user=self.request.user)
 
 
-def article_list(request, template='articles/article_list.html', extra_context=None):
-    context = RequestContext(request)
-    
-    articles = Article.objects.active(user=request.user) 
+class ArticleDetail(ListView):
+    model = Article
 
-    if extra_context is not None:
-        context.update(extra_context)
-
-    context.update({
-        'object_list': articles,
-    })
-    
-    return render_to_response(template, context)
-
+    def get_queryset(self):
+        return Article.objects.active(user=self.request.user)
