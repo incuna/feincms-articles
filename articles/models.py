@@ -63,35 +63,6 @@ class Article(Base):
         register_fn(cls, ArticleAdmin)
 
     @classmethod
-    def register_extensions(cls, *extensions):
-        if not hasattr(cls, '_article_extensions'):
-            cls._article_extensions = set()
-
-        here = cls.__module__.split('.')[:-1]
-        here_path = '.'.join(here + ['extensions'])
-
-        for ext in extensions:
-            if ext in cls._article_extensions:
-                continue
-
-            try:
-                if isinstance(ext, basestring):
-                    try:
-                        fn = get_callable(ext + '.register', False)
-                    except ImportError:
-                        fn = get_callable('%s.%s.register' % ( here_path, ext ), False)
-                # Not a string, so take our chances and just try to access "register"
-                else:
-                    fn = ext.register
-
-                cls.register_extension(fn)
-                cls._article_extensions.add(ext)
-            except Exception, e:
-                raise ImproperlyConfigured("%s.register_extensions('%s') raised an exception - '%s'" %
-                                            (cls.__name__, ext, e))
-
-
-    @classmethod
     def get_urls(cls):
         return cls.urlpatterns
 
