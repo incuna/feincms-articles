@@ -7,11 +7,11 @@ class ArticleDetail(DetailView):
     model = Article
 
     def get_queryset(self):
-        return Article.objects.active(user=self.request.user)
+        return Article.objects.active()
 
 
 class ArticleDetail(ListView):
     model = Article
 
     def get_queryset(self):
-        return Article.objects.active(user=self.request.user)
+        return Article.objects.active()

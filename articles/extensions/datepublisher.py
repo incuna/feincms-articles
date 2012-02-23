@@ -32,8 +32,7 @@ def register(cls, admin_cls):
     cls._meta.ordering.insert(0, '-publication_date')
     cls._meta.get_latest_by = 'publication_date'
 
-    cls.objects.active_filters.append(
-        Q(publication_date__lte=datetime.now) & \
+    cls.objects.active_filters['date'] = (Q(publication_date__lte=datetime.now) &
         (Q(publication_end_date__isnull=True) | Q(publication_end_date__gt=datetime.now)))
 
     if admin_cls:

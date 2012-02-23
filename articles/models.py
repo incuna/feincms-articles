@@ -12,7 +12,7 @@ from feincms.utils.managers import ActiveAwareContentManagerMixin
 
 
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
-    active_filters = [Q(active=True),]
+    active_filters = {'simple-active': Q(active=True)}
 
 
 class Article(Base):
