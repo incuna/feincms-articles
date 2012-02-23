@@ -7,6 +7,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.conf.urls.defaults import patterns, url
 
 from feincms.admin import editor
+from feincms.content.application import models as app_models
 from feincms.models import Base
 from feincms.utils.managers import ActiveAwareContentManagerMixin
 
@@ -22,7 +23,7 @@ class Article(Base):
     slug = models.SlugField(max_length=255, help_text='This will be automatically generated from the name', unique=True, editable=True)
 
     class Meta:
-        ordering = ['title', ]
+        ordering = ['title']
         unique_together = []
 
     objects = ArticleManager()
@@ -57,9 +58,9 @@ class Article(Base):
     def __unicode__(self):
         return u"%s" % (self.title)
 
-    @models.permalink
+    @app_models.permalink
     def get_absolute_url(self):
-        return ('article_detail', (), { 'article': self.slug, })
+        return ('article_detail', 'articles.urls', (), {'slug': self.slug})
 
     @property
     def is_active(self):

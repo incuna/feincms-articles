@@ -1,6 +1,6 @@
 {% extends "articles/base.html" %}
 
-{% load feincms_tags i18n pagination_tags %}
+{% load feincms_tags i18n %}
 
 {% block article-title %}
     <h2>{% trans 'Articles' %}</h2>
@@ -8,15 +8,13 @@
 
 {% block article-content %}
 
-    {% autopaginate object_list 10 %}
     {% for article in object_list %}  
     <div class="article short">
         <div class="summary">
-            <h3><a href="{{article.get_absolute_url }}">{{ article }}</a></h3>
-            {% feincms_render_region object 'summary' request %}
+            <h3><a href="{{ article.get_absolute_url }}">{{ article }}</a></h3>
+            {% feincms_render_region article 'summary' request %}
         </div>
     </div>
     {% endfor %}
-    {% paginate %}
 
 {% endblock %}
