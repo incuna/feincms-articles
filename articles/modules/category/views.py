@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
-from articles.views import article_detail as article_article_detail
+from articles.views import ArticleDetail
 from articles.models import Article
 from models import Category
 #from tagging.models import Tag, TaggedItem
@@ -8,19 +8,16 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 
 
-def article_detail(request, category_url, article, extra_context=None):
-
-    context = RequestContext(request)
-
-    article = get_object_or_404(Article.objects.active(user=request.user), category__local_url=category_url, slug=article)
-
-    return article_article_detail(request, article, template='articles/category_article_detail.html', extra_context=extra_context)
-
+class CategoryArticleDetail(ArticleDetail):
+    template_name = "articles/category_article_detail.html"
+    def get_queryset(self):
+        return super(CategoryArticleDetail, self).get_queryset().filter(category__local_url=self.kwargs['category_url'])
+article_detail = CategoryArticleDetail.as_view()
 
 def article_category(request, category_url=None, extra_context=None):
     context = RequestContext(request)
-    
-    articles = Article.objects.active(user=request.user) 
+
+    articles = Article.objects.active()
     if category_url is not None:
         category = get_object_or_404(Category.objects.active(user=request.user), local_url=category_url)
         if getattr(settings, 'ARTICLE_SHOW_DESCENDANTS', False):
