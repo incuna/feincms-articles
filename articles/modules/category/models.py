@@ -5,7 +5,9 @@ from django.db.models import Q
 from denorm import denormalized, depend_on_related
 from incuna.db.models import AutoSlugField
 from articles.models import Article
+from feincms.content.application import models as app_models
 
+# TODO: Use feincms.utils.managers.ActiveAwareContentManagerMixin
 class CategoryManager(models.Manager):
 
     def active_query(self, user=None):
@@ -60,9 +62,9 @@ class Category(models.Model):
     def __unicode__(self):
         return self.name
 
-    @models.permalink
+    @app_models.permalink
     def get_absolute_url(self):
-        return ('article_category', (self.local_url,))
+        return ('article_category', 'articles.urls', (self.local_url,))
 
 mptt.register(Category)
 

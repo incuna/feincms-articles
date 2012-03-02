@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls.defaults import patterns, url
+from feincms.content.application import models as app_models
 
 def register(cls, admin_cls):
     cls.add_to_class('category', models.ForeignKey('articles.Category', verbose_name=_('category')))
@@ -10,20 +11,21 @@ def register(cls, admin_cls):
 
     @classmethod
     def get_urlpatterns(cls):
-        return patterns('articles.modules.category.views',
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)(?P<slug>[a-z0-9_-]+)/$', 'article_detail', name="article_detail"),
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)$', 'article_category', name='article_category'),
-                url(r'^$', 'article_category', name='article_index'),
+        from articles.modules.category import views
+        return patterns('',
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)$', views.CategoryArticleList.as_view(), name='article_category'),
+                url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
        ) 
     cls.get_urlpatterns = get_urlpatterns
         
 
     def get_absolute_url(self):
-        return ('article_detail', (), {
+        return ('article_detail', 'articles.urls', (), {
                 'category_url': self.category.local_url,
                 'slug': self.slug,
                 })
-    cls.get_absolute_url = models.permalink(get_absolute_url)
+    cls.get_absolute_url = app_models.permalink(get_absolute_url)
 
     # TODO: What happened to active_filters??
     #def active_filter(queryset, user=None):
