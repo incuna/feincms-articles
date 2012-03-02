@@ -13,8 +13,8 @@ def register(cls, admin_cls):
     def get_urlpatterns(cls):
         from articles.modules.category import views
         return patterns('',
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)$', views.CategoryArticleList.as_view(), name='article_category'),
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/$', views.CategoryArticleList.as_view(), name='article_category'),
                 url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
        ) 
     cls.get_urlpatterns = get_urlpatterns
