@@ -25,17 +25,6 @@ def register(cls, admin_cls):
                 })
     cls.get_absolute_url = app_models.permalink(get_absolute_url)
 
-    # TODO: What happened to active_filters??
-    #def active_filter(queryset, user=None):
-    #    if user is not None and user.is_authenticated():
-    #        queryset = queryset.filter(Q(category__access_groups__isnull=True) | Q(category__access_groups__in=user.groups.all()))
-    #    else:
-    #        queryset = queryset.filter(category__access_groups__isnull=True)
-
-    #    return queryset
-
-    #cls.objects.active_filters.append(active_filter)
-
     if admin_cls:
         admin_cls.list_filter += [ 'category',]
         admin_cls.list_display.insert(1, 'category', )
