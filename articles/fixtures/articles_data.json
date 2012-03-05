@@ -4,7 +4,6 @@
     "model": "articles.article", 
     "fields": {
       "title": "Test article", 
-      "summary": "The summary.\r\n\r\nMulti line, plain text content area.", 
       "active": true, 
       "slug": "test-article"
     }
@@ -34,7 +33,6 @@
     "model": "articles.article", 
     "fields": {
       "title": "Inactive article", 
-      "summary": "", 
       "active": false, 
       "slug": "inactive-article"
     }

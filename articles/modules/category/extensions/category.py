@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls.defaults import patterns, url
 from feincms.content.application import models as app_models
@@ -16,9 +15,8 @@ def register(cls, admin_cls):
                 url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
                 url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/$', views.CategoryArticleList.as_view(), name='article_category'),
                 url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
-       ) 
+       )
     cls.get_urlpatterns = get_urlpatterns
-        
 
     def get_absolute_url(self):
         return ('article_detail', 'articles.urls', (), {

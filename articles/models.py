@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
-from django.core.exceptions import ImproperlyConfigured
 from django.conf.urls.defaults import patterns, url
 
 from feincms.admin import editor

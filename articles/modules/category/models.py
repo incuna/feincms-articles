@@ -1,6 +1,5 @@
 import mptt
 from django.conf import settings
-from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -12,7 +11,6 @@ from feincms.admin import editor
 from feincms.content.application import models as app_models
 
 
-# TODO: Use feincms.utils.managers.ActiveAwareContentManagerMixin
 class CategoryManager(models.Manager):
 
     def active_query(self, user=None):
@@ -84,13 +82,3 @@ class CategoryAdmin(editor.TreeEditor, ModelAdmin):
     prepopulated_fields = {
         'slug': ('name',),
     }
-    #if DJANGOCAL_SYNC:
-    #    fieldsets = (
-    #        (None, {
-    #            'fields': ('name', 'slug', 'parent', 'calendar_id', 'order_by')
-    #        }),
-    #        ('Permissions', {
-    #            'classes': ('collapse',),
-    #            'fields': ('access_groups',)
-    #        }),
-    #    )
