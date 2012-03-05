@@ -1,6 +1,5 @@
 from django.contrib import admin
-from incunafein.admin import editor
-from incuna.db.models import AutoSlugField
+from feincms.admin import editor
 from models import Category
 
 class CategoryAdmin(editor.TreeEditor):

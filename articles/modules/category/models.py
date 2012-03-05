@@ -3,7 +3,6 @@ from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from denorm import denormalized, depend_on_related
-from incuna.db.models import AutoSlugField
 from articles.models import Article
 from feincms.content.application import models as app_models
 
@@ -32,7 +31,7 @@ class Category(models.Model):
                        )
 
     name = models.CharField(max_length=255)
-    slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
+    slug = models.SlugField(max_length=255, help_text='This will be automatically generated from the name',unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
     order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order of article items in this category.', default='-publication_date')
 
