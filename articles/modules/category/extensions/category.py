@@ -1,32 +1,42 @@
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from django.conf.urls.defaults import patterns, include
+from django.conf.urls.defaults import patterns, url
+from feincms.content.application import models as app_models
 
 def register(cls, admin_cls):
     cls.add_to_class('category', models.ForeignKey('articles.Category', verbose_name=_('category')))
 
     cls._meta.unique_together += [('category', 'slug')]
 
-    cls.urlpatterns = patterns('', (r'^categories/', include('articles.modules.category.urls')),) + cls.urlpatterns
-    
+    @classmethod
+    def get_urlpatterns(cls):
+        from articles.modules.category import views
+        return patterns('',
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
+                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/$', views.CategoryArticleList.as_view(), name='article_category'),
+                url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
+       ) 
+    cls.get_urlpatterns = get_urlpatterns
+        
 
     def get_absolute_url(self):
-        return ('article_detail', (), {
+        return ('article_detail', 'articles.urls', (), {
                 'category_url': self.category.local_url,
-                'article': self.slug,
+                'slug': self.slug,
                 })
-    cls.get_absolute_url = models.permalink(get_absolute_url)
+    cls.get_absolute_url = app_models.permalink(get_absolute_url)
 
-    def active_filter(queryset, user=None):
-        if user is not None and user.is_authenticated():
-            queryset = queryset.filter(Q(category__access_groups__isnull=True) | Q(category__access_groups__in=user.groups.all()))
-        else:
-            queryset = queryset.filter(category__access_groups__isnull=True)
+    # TODO: What happened to active_filters??
+    #def active_filter(queryset, user=None):
+    #    if user is not None and user.is_authenticated():
+    #        queryset = queryset.filter(Q(category__access_groups__isnull=True) | Q(category__access_groups__in=user.groups.all()))
+    #    else:
+    #        queryset = queryset.filter(category__access_groups__isnull=True)
 
-        return queryset
+    #    return queryset
 
-    cls.objects.active_filters.append(active_filter)
+    #cls.objects.active_filters.append(active_filter)
 
     if admin_cls:
         admin_cls.list_filter += [ 'category',]

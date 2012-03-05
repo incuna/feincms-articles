@@ -1,11 +1,18 @@
 import mptt
+from django.conf import settings
 from datetime import datetime
 from django.db import models
 from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import get_callable
 from denorm import denormalized, depend_on_related
-from incuna.db.models import AutoSlugField
 from articles.models import Article
 
+from feincms.admin import editor
+from feincms.content.application import models as app_models
+
+
+# TODO: Use feincms.utils.managers.ActiveAwareContentManagerMixin
 class CategoryManager(models.Manager):
 
     def active_query(self, user=None):
@@ -23,19 +30,19 @@ class CategoryManager(models.Manager):
         return self.filter(self.active_query(user=user)).distinct()
 
 class Category(models.Model):
-    ORDER_BY_CHOICES = (('publication_date', 'Publication date (oldest first)'),
-                        ('-publication_date', 'Publication date (newest first)'),
-                        ('title', 'Title A-Z'),
-                        ('-title', 'Title Z-A'),
+    ORDER_BY_CHOICES = (('publication_date', _('Publication date (oldest first)')),
+                        ('-publication_date', _('Publication date (newest first)')),
+                        ('title', _('Title A-Z')),
+                        ('-title', _('Title Z-A')),
                        )
 
     name = models.CharField(max_length=255)
-    slug = AutoSlugField(max_length=255,populate_from="name",help_text='This will be automatically generated from the name',unique=True,editable=True)
+    slug = models.SlugField(max_length=255, help_text=_('This will be automatically generated from the name'),unique=True,editable=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
-    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text='The order of article items in this category.', default='-publication_date')
+    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text=_('The order of article items in this category.'), default='-publication_date')
 
     access_groups  = models.ManyToManyField("auth.Group", null=True, blank=True,
-                                            help_text='Users must be logged in and a member of the group(s) to access this group.', )
+                                            help_text=_('Users must be logged in and a member of the group(s) to access this group.'), )
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
     @depend_on_related('self',type='forward')
@@ -55,14 +62,35 @@ class Category(models.Model):
     class Meta:
         app_label = 'articles'
         ordering = ['tree_id', 'lft']
-        verbose_name_plural = 'categories'
+        verbose_name = _('category')
+        verbose_name_plural = _('categories')
 
     def __unicode__(self):
         return self.name
 
-    @models.permalink
+    @app_models.permalink
     def get_absolute_url(self):
-        return ('article_category', (self.local_url,))
+        return ('article_category', 'articles.urls', (self.local_url,))
 
 mptt.register(Category)
 
+
+ModelAdmin = get_callable(getattr(settings, 'CATEGORY_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
+
+
+class CategoryAdmin(editor.TreeEditor, ModelAdmin):
+    list_display = ['__unicode__', 'order_by']
+    list_filter = ['parent',]
+    prepopulated_fields = {
+        'slug': ('name',),
+    }
+    #if DJANGOCAL_SYNC:
+    #    fieldsets = (
+    #        (None, {
+    #            'fields': ('name', 'slug', 'parent', 'calendar_id', 'order_by')
+    #        }),
+    #        ('Permissions', {
+    #            'classes': ('collapse',),
+    #            'fields': ('access_groups',)
+    #        }),
+    #    )
