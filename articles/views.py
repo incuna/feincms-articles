@@ -8,7 +8,10 @@ class AppContentMixin(object):
         """
         Returns the template tuple needed for FeinCMS App Content.
         """
-        return (self.get_template_names(), context)
+        if hasattr(self.request, '_feincms_extra_context') and 'app_config' in self.request._feincms_extra_context:
+            return (self.get_template_names(), context)
+
+        return super(AppContentMixin, self).render_to_response(context, **response_kwargs)
 
 
 class ArticleDetail(AppContentMixin, DetailView):
