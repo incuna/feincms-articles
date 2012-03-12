@@ -34,12 +34,12 @@ class Category(models.Model):
                         ('-title', _('Title Z-A')),
                        )
 
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, help_text=_('This will be automatically generated from the name'),unique=True,editable=True)
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
-    order_by = models.CharField('articles order', max_length=30, choices=ORDER_BY_CHOICES, help_text=_('The order of article items in this category.'), default='-publication_date')
+    name = models.CharField(_('name'), max_length=255)
+    slug = models.SlugField(_('slug'), max_length=255, help_text=_('This will be automatically generated from the name'),unique=True,editable=True)
+    parent = models.ForeignKey('self', verbose_name=_('parent'), blank=True, null=True, related_name='children')
+    order_by = models.CharField(_('articles order'), max_length=30, choices=ORDER_BY_CHOICES, help_text=_('The order of article items in this category.'), default='-publication_date')
 
-    access_groups  = models.ManyToManyField("auth.Group", null=True, blank=True,
+    access_groups  = models.ManyToManyField("auth.Group", verbose_name=_('access groups'), null=True, blank=True,
                                             help_text=_('Users must be logged in and a member of the group(s) to access this group.'), )
 
     @denormalized(models.CharField, max_length=255, editable=False, default='', db_index=True)
