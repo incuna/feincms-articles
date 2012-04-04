@@ -5,7 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
 from django.conf.urls.defaults import patterns, url
 
-from feincms.admin import editor
+try:
+    from feincms.admin.item_editor import ItemEditor
+except ImportError:
+    from feincms.admin.editor import ItemEditor
+
 from feincms.content.application import models as app_models
 from feincms.models import Base
 from feincms.utils.managers import ActiveAwareContentManagerMixin
@@ -71,7 +75,7 @@ class Article(Base):
 ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
 
 
-class ArticleAdmin(editor.ItemEditor, ModelAdmin):
+class ArticleAdmin(ItemEditor, ModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
     search_fields = ['title', 'slug']
