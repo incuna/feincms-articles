@@ -22,12 +22,14 @@ class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
 class Article(Base):
     active = models.BooleanField(_('active'), default=True)
 
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, help_text='This will be automatically generated from the name', unique=True, editable=True)
+    title = models.CharField(_('title'), max_length=255)
+    slug = models.SlugField(_('slug'), max_length=255, help_text=_('This will be automatically generated from the name'), unique=True, editable=True)
 
     class Meta:
         ordering = ['title']
         unique_together = []
+        verbose_name = _('article')
+        verbose_name_plural = _('articles')
 
     objects = ArticleManager()
 
