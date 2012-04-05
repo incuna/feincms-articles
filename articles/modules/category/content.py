@@ -58,7 +58,7 @@ class ArticleList(models.Model):
     If no categories are selected then list all articles.
     """
     number = models.IntegerField()
-    categories = models.ManyToManyField('articles.Category')
+    categories = models.ManyToManyField('articles.Category', null=True, blank=True)
 
     class Meta:
         abstract = True
