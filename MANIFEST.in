@@ -1,4 +1,4 @@
 include README.markdown
-recursive-include */templates *.html
-recursive-include */fixtures *.json
+recursive-include * *.html
+recursive-include * *.json
 
