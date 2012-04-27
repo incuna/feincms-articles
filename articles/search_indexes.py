@@ -2,7 +2,7 @@ from haystack import indexes
 from models import Article
 
 
-class ArticleIndex(indexes.SearchIndex):
+class TempArticleIndex(indexes.SearchIndex):
     name = indexes.CharField(model_attr='title')
     text = indexes.CharField(document=True, use_template=True)
 
@@ -14,10 +14,13 @@ class ArticleIndex(indexes.SearchIndex):
         return self.get_model().objects.active()
 
 
-# In haystack < 2.0 we need to explicitly register indexes
 try:
+    # In haystack < 2.0 we need to explicitly register indexes
     from haystack import site
 except ImportError:
-    pass
+    # In haystack >= 2.0 Indexes subclass indexes.Indexable
+    class ArticleIndex(TempArticleIndex, indexes.Indexable):
+        pass
 else:
+    ArticleIndex = TempArticleIndex
     site.register(Article, ArticleIndex)
