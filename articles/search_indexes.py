@@ -9,10 +9,8 @@ class TempArticleIndex(indexes.SearchIndex):
     def get_model(self):
         return Article
 
-    def get_queryset(self):
-        """Used when the entire index for model is updated."""
+    def index_queryset(self):
         return self.get_model().objects.active()
-
 
 try:
     # In haystack < 2.0 we need to explicitly register indexes
@@ -22,5 +20,8 @@ except ImportError:
     class ArticleIndex(TempArticleIndex, indexes.Indexable):
         pass
 else:
-    ArticleIndex = TempArticleIndex
+    class ArticleIndex(TempArticleIndex):
+        def get_queryset(self):
+            return self.index_queryset()
+
     site.register(Article, ArticleIndex)

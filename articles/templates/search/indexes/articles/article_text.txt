@@ -1,7 +1,11 @@
+{% load feincms_tags %}
+
 {{ object.title }}
-{% for content in object.content.summary %}
-  {{ content.render|striptags }}
+
+{% autoescape off %}
+{% filter striptags %}
+{% for region in object.template.regions %}
+    {% feincms_render_region object region.key '' %}
 {% endfor %}
-{% for content in object.content.main %}
-  {{ content.render|striptags }}
-{% endfor %}
+{% endfilter %}
+{% endautoescape %}
