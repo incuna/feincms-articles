@@ -66,7 +66,7 @@ To add an extension create a python module that defines a register function
 that accepts the Article class and the ArticleAdmin class as arguments and
 modifies them as required.
 
-Here is the address extension (profiles/extensions/tags.py):
+Here is the address extension (similar to articles/extensions/tags.py):
 
     def register(cls, admin_cls):
         cls.add_to_class('tags', TaggableManager(verbose_name=_('tags'), blank=True))
