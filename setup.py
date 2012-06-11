@@ -15,5 +15,5 @@ setup(
     description = "Provides Articles using (FeinCMS content) with categories and tags.",
     author = "Incuna Ltd",
     author_email = "admin@incuna.com",
-    url = "https://bitbucket.org/incuna/feincms-articles/",
+    url = "https://github.com/incuna/feincms-articles/",
 )
