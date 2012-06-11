@@ -1,10 +1,21 @@
-import unittest
 import warnings
 import datetime
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from incuna.utils import find
+
 from articles.models import Article
+
+
+def find(f, seq):
+  """
+  Return first item in sequence where f(item) == True.
+  e.g. 
+  fred = find(lambda person: person.name == 'Fred', peeps)
+  """
+  for item in seq:
+    if f(item): 
+      return item
 
 
 class ArticleAccessTests(TestCase):

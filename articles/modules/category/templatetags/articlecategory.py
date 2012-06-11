@@ -1,11 +1,7 @@
-import re
 from django import template
-from django.forms.util import flatatt
-from django.utils.safestring import mark_safe
-from articles.modules.category.models import Category
-from articles.models import Article
 
-from incuna.template.defaulttags import parse_tokens
+from articles.modules.category.models import Category
+from articles.utils import parse_tokens
 
 register = template.Library()
 
