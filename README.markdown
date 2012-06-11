@@ -1,10 +1,14 @@
 Extensible FeinCMS content article for Django
-============================================
+=============================================
 
-This is an extensible FeinCMS content article system for Django, designed to
-provide a simple Article model that is extensible. The concept (and some code)
-is borrowed from the [FeinCMS](https://github.com/matthiask/feincms) Page
-model.
+This is an extensible [FeinCMS](https://github.com/mattiask/feincms) content
+article system for Django, designed to provide a simple Article model that is
+extensible.
+
+What is an Article? Many things! You can use it as a news section, as a
+knowledge base, as a catalogue of pdfs, or pretty much anything else you can
+make it fit with.
+
 
 Installation and setup
 ----------------------
@@ -13,11 +17,37 @@ Firstly, get the package.
 
     pip install feincms-articles
 
-You will then need to add `articles` to your `INSTALLED_APPS` setting.
+You will then need to add `articles` to your `INSTALLED_APPS` setting:
 
-Before proceeding with `manage.py syncdb`, you may want to add some article
-extensions. By default the articles module has a basic set of content fields
-such as title, summary and content.
+    INSTALLED_APPS = (
+        # ...
+        'articles',
+    )
+
+Before proceeding with `manage.py syncdb`, you will need to create some content
+typesm and you may want to add some article extensions. By default the articles
+module has a basic set of content fields such as title, summary and content.
+
+
+ContentTypes
+------------
+
+You need to create some FeinCMS content types to add to your Articles. No types
+are created by default, because there is no way to unregister them. A sane
+default might be to create `MediaFileContent` and `RichTextContent` models; you
+can do this by adding the following lines somewhere into your project, for
+example at the bottom of a `models.py` file that will be processed anyway:
+
+    from feincms.content.richtext.models import RichTextContent 
+    from feincms.content.medialibrary.v2 import MediaFileContent
+
+    from articles.models import Article
+
+    Article.register_regions(('top', _('Top content')), ('main', _('Main region')),)
+
+    Article.create_content_type(RichTextContent)
+    Article.create_content_type(MediaFileContent, POSITION_CHOICES=(('block', _('block')), ('left', _('left')), ('right', _('right')),))
+
 
 Extensions
 ----------
@@ -31,36 +61,35 @@ The extensions can be activated by adding the following to a the bottom of a
 `models.py` file that will be processed anyway:
 
     from articles.models import Article
-    Article.register_extensions('articles.modules.category.extensions.category', 'datepublisher', 'tags', 'thumbnail') 
+
+    Article.register_extensions(
+        'articles.modules.category.extensions.category',
+        'feincms.module.extensions.datepublisher',
+        'articles.extensions.tags',
+        'articles.extensions.thumbnail',
+    )
 
 If the extension requires it's own models (like the category extension) then
 the app containing the models will also need to be added to your
 `INSTALLED_APPS`.
 
+*[Please note that as of FeinCMS 1.6 you will no longer be able to use the
+short-form registration]*
 
-ContentTypes
-------------
+List of available extensions:
 
-You need to create some FeinCMS content types to add to your Articles. No
-models are created by default, because there is no way to unregister
-models. A sane default might be to create `ImageContent` and `RichTextContent`
-models; you can do this by adding the following lines somewhere into your
-project, for example at the bottom of a `models.py` file that will be processed
-anyway:
+- `articles.extensions.location`
+- `articles.extensions.tags`
+- `articles.extensions.thumbnails`
+- `articles.modules.category.extensions.category`
 
-    from feincms.content.richtext.models import RichTextContent 
-    from feincms.content.image.models import ImageContent
-
-    from articles.models import Article
-
-    Article.register_regions(('top', _('Top content')), ('main', _('Main region')),)
-
-    Article.create_content_type(RichTextContent)
-    Article.create_content_type(ImageContent, POSITION_CHOICES=(('block', _('block')), ('left', _('left')), ('right', _('right')),))
+You can also use some of the generic extensions from
+[FeinCMS](https://github.com/feincms/feincms/tree/master/feincms/module/extensions).
 
 
-Adding extensions
------------------
+
+Creating your own extensions
+----------------------------
 
 To add an extension create a python module that defines a register function
 that accepts the Article class and the ArticleAdmin class as arguments and
@@ -78,4 +107,3 @@ Here is the address extension (similar to articles/extensions/tags.py):
         if admin_cls:
             if admin_cls.fieldsets:
                 admin_cls.fieldsets[0][1]['fields'].append('tags')
-
