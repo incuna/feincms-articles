@@ -1,7 +1,7 @@
 Extensible FeinCMS content article for Django
 =============================================
 
-This is an extensible [FeinCMS](https://github.com/mattiask/feincms) content
+This is an extensible [FeinCMS](https://github.com/feincms/feincms) content
 article system for Django, designed to provide a simple Article model that is
 extensible.
 
