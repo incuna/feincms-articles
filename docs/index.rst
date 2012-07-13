@@ -56,7 +56,7 @@ Extensions
 Extensions are a way to add often-used functionality the Article model. The
 extensions are standard python modules with a ``register()`` method which will be
 called upon registering the extension. The ``register()`` method receives the
-``Article`` class itself and the model admin class ``ArticleAdmin`` as arguments. 
+``Article`` class itself and the model admin class ``ArticleAdmin`` as arguments.
 
 The extensions can be activated by adding the following to a the bottom of a
 ``models.py`` file that will be processed anyway::
@@ -70,24 +70,13 @@ The extensions can be activated by adding the following to a the bottom of a
         'articles.extensions.thumbnail',
     )
 
-If the extension requires it's own models (like the category extension) then
-the app containing the models will also need to be added to your
-``INSTALLED_APPS``.
+Articles comes with a number of :doc:`bundled extensions<extensions>`, or you
+can use the `generic FeinCMS extensions
+<http://feincms-django-cms.readthedocs.org/en/latest/api/page.html#extensions-not-specific-to-the-page-module>`_.
 
-.. note::
+.. todo::
 
-    Please note that as of FeinCMS 1.6 you will no longer be able to use the
-    short-form registration
-
-List of available extensions:
-
-- ``articles.extensions.location``
-- ``articles.extensions.tags``
-- ``articles.extensions.thumbnails``
-- ``articles.modules.category.extensions.category``
-
-You can also use some of the generic extensions from
-`FeinCMS <https://github.com/feincms/feincms/tree/master/feincms/module/extensions>`_.
+    Make this an intersphinx when feincms docs are updated...
 
 
 Creating your own extensions
@@ -110,12 +99,23 @@ Here is the tags extension (similar to articles/extensions/tags.py)::
             if admin_cls.fieldsets:
                 admin_cls.fieldsets[0][1]['fields'].append('tags')
 
+Hooking up articles into your application
+-----------------------------------------
+
+You have two main options here, depending on your use case. FeinCMS articles
+can be deployed using :ref:`Application content <feincms:integration>`, hooking
+up the URLconf ``articles.urls``.
+
+Alternatively you can just use content types to display a list of articles on a
+page.
+
 Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
+    extensions
 
 
 Indices and tables
