@@ -115,6 +115,9 @@ Alternatively you can just use content types to display a list of articles on a
 page. There is a bundled content type ``articles.content.ArticleList`` which
 will render a fixed number of articles.
 
+If you're not using the FeinCMS page module, the urls and views within articles
+are safe to use without ``ApplicationContent``.
+
 .. module:: articles.modules.category.content
 
 The category module also comes with content types for a list of articles
