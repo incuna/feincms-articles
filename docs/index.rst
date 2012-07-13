@@ -30,14 +30,16 @@ articles module has a basic set of content fields such as title, summary and
 content.
 
 
-ContentTypes
-------------
+Registering ContentTypes
+------------------------
 
-You need to create some FeinCMS content types to add to your Articles. No types
-are created by default, because there is no way to unregister them. A sane
-default might be to create ``MediaFileContent`` and ``RichTextContent`` models;
-you can do this by adding the following lines somewhere into your project, for
-example at the bottom of a ``models.py`` file that will be processed anyway::
+The ``Article`` model extends from :class:`the FeinCMS Base
+model <feincms:feincms.models.Base>`, so you need to create some FeinCMS content
+types to add to your Articles. No types are created by default, because there
+is no way to unregister them. A sane default might be to create
+``MediaFileContent`` and ``RichTextContent`` models; you can do this by adding
+the following lines somewhere into your project, for example at the bottom of a
+``models.py`` file that will be processed anyway::
 
     from feincms.content.richtext.models import RichTextContent 
     from feincms.content.medialibrary.v2 import MediaFileContent
@@ -99,6 +101,7 @@ Here is the tags extension (similar to articles/extensions/tags.py)::
             if admin_cls.fieldsets:
                 admin_cls.fieldsets[0][1]['fields'].append('tags')
 
+
 Hooking up articles into your application
 -----------------------------------------
 
@@ -108,6 +111,7 @@ up the URLconf ``articles.urls``.
 
 Alternatively you can just use content types to display a list of articles on a
 page.
+
 
 Contents
 ========
@@ -124,4 +128,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
