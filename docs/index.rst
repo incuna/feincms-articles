@@ -120,6 +120,7 @@ Contents
     :maxdepth: 2
 
     extensions
+    settings
 
 
 Indices and tables

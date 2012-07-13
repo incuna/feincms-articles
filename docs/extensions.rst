@@ -1,7 +1,9 @@
 Bundled extensions
 ==================
 
-FeinCMS articles comes with a number of 
+FeinCMS articles uses the FeinCMS :mod:`extensible architecture
+<feincms:feincms.module.page.extension>`, and it comes with a number of built
+in extensions.
 
 .. note::
 
@@ -22,7 +24,7 @@ Register: ``articles.extensions.location``.
 Requires :mod:`GeoDjango <django:django.contrib.gis>`.
 
 Attaches a physical location point to each article. We recommend that you set
-:setting:`ARTICLE_MODELADMIN_CLASS` to a (subclass of)
+:data:`ARTICLE_MODELADMIN_CLASS` to a (subclass of)
 :class:`django:django.contrib.gis.admin.OSMGeoAdmin` to get a nicer admin user
 interface.
 
