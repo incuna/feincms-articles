@@ -123,6 +123,12 @@ belonging to a certain category
 articles belonging to a set of categories
 (``articles.modules.category.content.ArticleList``).
 
+.. function:: article_tags.articles
+
+There is also a template tag ``article_tags.articles``, which will render a
+list of articles. It takes a optional parameters for ``limit`` (the number of
+articles) and the variable to insert the articles list into the context as.
+
 
 Contents
 ========
