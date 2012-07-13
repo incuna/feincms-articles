@@ -109,8 +109,6 @@ You have two main options here, depending on your use case. FeinCMS articles
 can be deployed using :ref:`Application content <feincms:integration>`, hooking
 up the URLconf ``articles.urls``.
 
-.. class:: articles.content.ArticleList
-
 Alternatively you can just use content types to display a list of articles on a
 page. There is a bundled content type ``articles.content.ArticleList`` which
 will render a fixed number of articles.
@@ -118,15 +116,11 @@ will render a fixed number of articles.
 If you're not using the FeinCMS page module, the urls and views within articles
 are safe to use without ``ApplicationContent``.
 
-.. module:: articles.modules.category.content
-
 The category module also comes with content types for a list of articles
 belonging to a certain category
 (``articles.modules.category.content.ArticleCategoryList``) and the list of
 articles belonging to a set of categories
 (``articles.modules.category.content.ArticleList``).
-
-.. function:: article_tags.articles
 
 There is also a template tag ``article_tags.articles``, which will render a
 list of articles. It takes a optional parameters for ``limit`` (the number of
