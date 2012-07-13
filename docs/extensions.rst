@@ -21,9 +21,10 @@ Register: ``articles.extensions.location``.
 
 Requires :mod:`GeoDjango <django:django.contrib.gis>`.
 
-Attaches a physical location point to each article. You will need to ensure you
-set :setting:`ARTICLE_MODELADMIN_CLASS` to a (subclass of)
-:class:`django:django.contrib.gis.admin.OSMGeoAdmin`
+Attaches a physical location point to each article. We recommend that you set
+:setting:`ARTICLE_MODELADMIN_CLASS` to a (subclass of)
+:class:`django:django.contrib.gis.admin.OSMGeoAdmin` to get a nicer admin user
+interface.
 
 .. module:: articles.extensions.tags
 
