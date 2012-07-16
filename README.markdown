@@ -9,6 +9,8 @@ What is an Article? Many things! You can use it as a news section, as a
 knowledge base, as a catalogue of pdfs, or pretty much anything else you can
 make it fit with.
 
+Full documentation at http://feincms-articles.rtfd.org
+
 
 Installation and setup
 ----------------------
