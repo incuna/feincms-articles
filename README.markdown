@@ -48,7 +48,7 @@ example at the bottom of a `models.py` file that will be processed anyway:
     Article.register_regions(('top', _('Top content')), ('main', _('Main region')),)
 
     Article.create_content_type(RichTextContent)
-    Article.create_content_type(MediaFileContent, POSITION_CHOICES=(('block', _('block')), ('left', _('left')), ('right', _('right')),))
+    Article.create_content_type(MediaFileContent, TYPE_CHOICES=(('block', _('block')), ('left', _('left')), ('right', _('right')),))
 
 
 Extensions
