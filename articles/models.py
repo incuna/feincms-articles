@@ -88,3 +88,14 @@ class ArticleAdmin(ItemEditor, ModelAdmin):
             'fields': ['active', 'title', 'slug']
         }),
     ]
+
+    # TODO: add_extension_options is copied from feincms.module.page.modeladmins.PageAdmin
+    # When FeinCMS 1.7 is released it should be provided by extending feincms.extensions.ExtensionModelAdmin
+    @classmethod
+    def add_extension_options(cls, *f):
+        if isinstance(f[-1], dict):     # called with a fieldset
+            cls.fieldsets.insert(cls.fieldset_insertion_index, f)
+            f[1]['classes'] = list(f[1].get('classes', []))
+            f[1]['classes'].append('collapse')
+        else:   # assume called with "other" fields
+            cls.fieldsets[1][1]['fields'].extend(f)
