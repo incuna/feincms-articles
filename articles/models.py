@@ -87,10 +87,12 @@ class ArticleAdmin(ItemEditor, ModelAdmin):
         (None, {
             'fields': ['active', 'title', 'slug']
         }),
+        # <-- insertion point, extensions appear here, see insertion_index above
     ]
 
     # TODO: add_extension_options is copied from feincms.module.page.modeladmins.PageAdmin
     # When FeinCMS 1.7 is released it should be provided by extending feincms.extensions.ExtensionModelAdmin
+    fieldset_insertion_index = 1
     @classmethod
     def add_extension_options(cls, *f):
         if isinstance(f[-1], dict):     # called with a fieldset
