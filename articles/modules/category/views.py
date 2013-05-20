@@ -82,4 +82,4 @@ class CategoryArticleList(ArticleList, CategoryAccesssGroupsMixin):
             else:
                 articles = articles.filter(category=self.category).order_by(self.category.order_by)
 
-        return articles
+        return articles.select_related('category')
