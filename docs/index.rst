@@ -42,7 +42,7 @@ the following lines somewhere into your project, for example at the bottom of a
 ``models.py`` file that will be processed anyway::
 
     from feincms.content.richtext.models import RichTextContent 
-    from feincms.content.medialibrary.v2 import MediaFileContent
+    from feincms.content.medialibrary import MediaFileContent
 
     from articles.models import Article
 
