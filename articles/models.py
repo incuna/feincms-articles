@@ -12,6 +12,7 @@ except ImportError:
 
 from feincms.content.application import models as app_models
 from feincms.models import Base
+from feincms.module.mixins import ContentModelMixin
 from feincms.utils.managers import ActiveAwareContentManagerMixin
 
 
@@ -19,7 +20,7 @@ class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
     active_filters = {'simple-active': Q(active=True)}
 
 
-class Article(Base):
+class Article(ContentModelMixin, Base):
     active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(_('title'), max_length=255)
@@ -50,11 +51,6 @@ class Article(Base):
         # Removes the field setter if exists
         if hasattr(cls, f_name):
             delattr(cls, f_name)
-
-    @classmethod
-    def register_extension(cls, register_fn):
-        """Extended from FeinCMS base to add the Admin class."""
-        register_fn(cls, ArticleAdmin)
 
     @classmethod
     def get_urls(cls):
