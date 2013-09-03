@@ -7,7 +7,7 @@ setup(
     packages = find_packages(),
     include_package_data=True,
     install_requires=[
-        "FeinCMS",
+        "FeinCMS>=1.7",
         "django-mptt",
         "django-pagination",
     ],
