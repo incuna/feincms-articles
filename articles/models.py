@@ -14,7 +14,7 @@ from feincms.content.application import models as app_models
 from feincms.models import Base
 from feincms.module.mixins import ContentModelMixin
 from feincms.utils.managers import ActiveAwareContentManagerMixin
-
+from feincms.extensions import ExtensionModelAdmin
 
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
     active_filters = {'simple-active': Q(active=True)}
@@ -71,7 +71,7 @@ class Article(ContentModelMixin, Base):
 ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
 
 
-class ArticleAdmin(ItemEditor, ModelAdmin):
+class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
     list_display = ['__unicode__', 'active',]
     list_filter = []
     search_fields = ['title', 'slug']
@@ -86,14 +86,16 @@ class ArticleAdmin(ItemEditor, ModelAdmin):
         # <-- insertion point, extensions appear here, see insertion_index above
     ]
 
-    # TODO: add_extension_options is copied from feincms.module.page.modeladmins.PageAdmin
-    # When FeinCMS 1.7 is released it should be provided by extending feincms.extensions.ExtensionModelAdmin
     fieldset_insertion_index = 1
-    @classmethod
-    def add_extension_options(cls, *f):
-        if isinstance(f[-1], dict):     # called with a fieldset
-            cls.fieldsets.insert(cls.fieldset_insertion_index, f)
-            f[1]['classes'] = list(f[1].get('classes', []))
-            f[1]['classes'].append('collapse')
-        else:   # assume called with "other" fields
-            cls.fieldsets[1][1]['fields'].extend(f)
+
+    ## TODO: add_extension_options is copied from feincms.module.page.modeladmins.PageAdmin
+    ## When FeinCMS 1.7 is released it should be provided by extending feincms.extensions.ExtensionModelAdmin
+
+    #@classmethod
+    #def add_extension_options(cls, *f):
+    #    if isinstance(f[-1], dict):     # called with a fieldset
+    #        cls.fieldsets.insert(cls.fieldset_insertion_index, f)
+    #        f[1]['classes'] = list(f[1].get('classes', []))
+    #        f[1]['classes'].append('collapse')
+    #    else:   # assume called with "other" fields
+    #        cls.fieldsets[1][1]['fields'].extend(f)

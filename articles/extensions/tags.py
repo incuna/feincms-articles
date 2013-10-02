@@ -19,6 +19,7 @@ def register(cls, admin_cls):
     cls.get_urlpatterns = get_urlpatterns
 
     if admin_cls:
-        if admin_cls.fieldsets:
-            admin_cls.fieldsets[0][1]['fields'].append('tags')
+        admin_cls.add_extension_options(_('Tags'), {
+            'fields': ('tags',),
+        })
 
