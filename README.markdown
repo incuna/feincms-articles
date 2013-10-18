@@ -27,7 +27,7 @@ You will then need to add `articles` to your `INSTALLED_APPS` setting:
     )
 
 Before proceeding with `manage.py syncdb`, you will need to create some content
-typesm and you may want to add some article extensions. By default the articles
+types and you may want to add some article extensions. By default the articles
 module has a basic set of content fields such as title, summary and content.
 
 
@@ -74,9 +74,6 @@ The extensions can be activated by adding the following to a the bottom of a
 If the extension requires it's own models (like the category extension) then
 the app containing the models will also need to be added to your
 `INSTALLED_APPS`.
-
-*[Please note that as of FeinCMS 1.6 you will no longer be able to use the
-short-form registration]*
 
 List of available extensions:
 
