@@ -1,7 +1,8 @@
+from django.conf.urls.defaults import patterns, url
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.conf.urls.defaults import patterns, url
 from feincms.content.application import models as app_models
+
 
 def register(cls, admin_cls):
     cls.add_to_class('category', models.ForeignKey('articles.Category', verbose_name=_('category')))

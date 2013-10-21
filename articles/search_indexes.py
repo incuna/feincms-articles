@@ -1,5 +1,5 @@
-from haystack import indexes
 from django.db.models.fields import FieldDoesNotExist
+from haystack import indexes
 
 from models import Article
 

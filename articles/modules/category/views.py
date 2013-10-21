@@ -1,10 +1,11 @@
-from django.shortcuts import get_object_or_404
-from articles.views import ArticleDetail, ArticleList
-from models import Category
-#from tagging.models import Tag, TaggedItem
 from django.conf import settings
-from django.http import HttpResponseRedirect
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+
+from .models import Category
+from articles.views import ArticleDetail, ArticleList
+
 
 class CategoryAccesssGroupsMixin(object):
     def has_access_groups_permission(self, category):

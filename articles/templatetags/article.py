@@ -1,7 +1,7 @@
 from django import template
 
-from articles.models import Article
-from articles.utils import parse_tokens
+from ..models import Article
+from ..utils import parse_tokens
 
 register = template.Library()
 
