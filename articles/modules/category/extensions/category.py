@@ -28,13 +28,6 @@ def register(cls, admin_cls):
     if admin_cls:
         admin_cls.list_filter += [ 'category',]
         admin_cls.list_display.insert(1, 'category', )
-
-
-        if admin_cls.fieldsets:
-            fields = admin_cls.fieldsets[0][1]['fields']
-            try:
-                at = fields.index('title')
-            except ValueError:
-                at = len(fields)
-            fields.insert(at, 'category')
-
+        admin_cls.add_extension_options(_('Category'), {
+            'fields': ('category',),
+        })
