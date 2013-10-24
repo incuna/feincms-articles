@@ -1,14 +1,15 @@
 import mptt
+from denorm import denormalized, depend_on_related
 from django.conf import settings
+from django.core.urlresolvers import get_callable
 from django.db import models
 from django.db.models import Q
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import get_callable
-from denorm import denormalized, depend_on_related
-from articles.models import Article
-
 from feincms.admin import editor
 from feincms.content.application import models as app_models
+
+from articles.models import Article
 
 
 class CategoryManager(models.Manager):
@@ -27,6 +28,8 @@ class CategoryManager(models.Manager):
 
         return self.filter(self.active_query(user=user)).distinct()
 
+
+@python_2_unicode_compatible
 class Category(models.Model):
     ORDER_BY_CHOICES = (('publication_date', _('Publication date (oldest first)')),
                         ('-publication_date', _('Publication date (newest first)')),
@@ -63,7 +66,7 @@ class Category(models.Model):
         verbose_name = _('category')
         verbose_name_plural = _('categories')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @app_models.permalink
@@ -77,7 +80,7 @@ ModelAdmin = get_callable(getattr(settings, 'CATEGORY_MODELADMIN_CLASS', 'django
 
 
 class CategoryAdmin(editor.TreeEditor, ModelAdmin):
-    list_display = ['__unicode__', 'order_by']
+    list_display = ['name', 'order_by']
     list_filter = ['parent',]
     prepopulated_fields = {
         'slug': ('name',),

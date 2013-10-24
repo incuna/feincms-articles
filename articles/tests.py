@@ -1,21 +1,21 @@
-import warnings
 import datetime
+import warnings
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from articles.models import Article
+from .models import Article
 
 
 def find(f, seq):
-  """
-  Return first item in sequence where f(item) == True.
-  e.g. 
-  fred = find(lambda person: person.name == 'Fred', peeps)
-  """
-  for item in seq:
-    if f(item): 
-      return item
+    """
+    Return first item in sequence where f(item) == True.
+    e.g.
+    fred = find(lambda person: person.name == 'Fred', peeps)
+    """
+    for item in seq:
+        if f(item):
+            return item
 
 
 class ArticleAccessTests(TestCase):

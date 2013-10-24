@@ -1,6 +1,7 @@
 import warnings
-from django.contrib.gis.db import models
+
 from django.contrib.gis import admin
+from django.contrib.gis.db import models
 from django.utils.translation import ugettext_lazy as _
 
 

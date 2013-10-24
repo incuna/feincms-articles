@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView
 
-from models import Article
+from .models import Article
 
 
 class AppContentMixin(object):

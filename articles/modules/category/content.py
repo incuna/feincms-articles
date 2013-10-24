@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.admin.widgets import AdminRadioSelect
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
-
 from feincms.admin.item_editor import ItemEditorForm
 
 from articles.models import Article

@@ -3,7 +3,8 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import get_callable
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
+from django.utils.encoding import python_2_unicode_compatible
 
 try:
     from feincms.admin.item_editor import ItemEditor
@@ -16,10 +17,12 @@ from feincms.module.mixins import ContentModelMixin
 from feincms.utils.managers import ActiveAwareContentManagerMixin
 from feincms.extensions import ExtensionModelAdmin
 
+
 class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
     active_filters = {'simple-active': Q(active=True)}
 
 
+@python_2_unicode_compatible
 class Article(ContentModelMixin, Base):
     active = models.BooleanField(_('active'), default=True)
 
@@ -56,8 +59,8 @@ class Article(ContentModelMixin, Base):
     def get_urls(cls):
         return cls.get_urlpatterns()
 
-    def __unicode__(self):
-        return u"%s" % (self.title)
+    def __str__(self):
+        return self.title
 
     @app_models.permalink
     def get_absolute_url(self):
@@ -72,7 +75,7 @@ ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.
 
 
 class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
-    list_display = ['__unicode__', 'active',]
+    list_display = ['title', 'active',]
     list_filter = []
     search_fields = ['title', 'slug']
     filter_horizontal = []
