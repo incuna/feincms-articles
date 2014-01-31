@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## v1.0
+
+* Migrate extensions to inherit from ``feincms.extensions.Extension``. Support
+ for ``register(cls, admin_cls)``-style functions is removed in FeinCMS v1.9.
 
 ## v0.4
 
