@@ -13,10 +13,10 @@ def register(cls, admin_cls):
     def get_urlpatterns(cls):
         from articles.modules.category import views
         return patterns('',
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name="article_detail"),
-                url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/$', views.CategoryArticleList.as_view(), name='article_category'),
-                url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
-       )
+            url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/(?P<slug>[a-z0-9_-]+)/$', views.CategoryArticleDetail.as_view(), name='article_detail'),
+            url(r'^(?P<category_url>[a-z0-9_/-]+/)articles/$', views.CategoryArticleList.as_view(), name='article_category'),
+            url(r'^$', views.CategoryArticleList.as_view(), name='article_index'),
+        )
     cls.get_urlpatterns = get_urlpatterns
 
     def get_absolute_url(self):
@@ -27,7 +27,7 @@ def register(cls, admin_cls):
     cls.get_absolute_url = app_models.permalink(get_absolute_url)
 
     if admin_cls:
-        admin_cls.list_filter += [ 'category',]
+        admin_cls.list_filter += [ 'category']
         admin_cls.list_display.insert(1, 'category', )
         admin_cls.add_extension_options(_('Category'), {
             'fields': ('category',),

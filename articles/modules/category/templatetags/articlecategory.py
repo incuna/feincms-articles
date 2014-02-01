@@ -3,7 +3,9 @@ from django import template
 from articles.modules.category.models import Category
 from articles.utils import parse_tokens
 
+
 register = template.Library()
+
 
 class CategoriesNode(template.Node):
     """
@@ -45,9 +47,8 @@ class CategoriesNode(template.Node):
 
 @register.tag()
 def articlecategories(parser, token):
-    bits = token.split_contents() 
+    bits = token.split_contents()
 
     args, kwargs = parse_tokens(parser, bits)
 
     return CategoriesNode(*args, **kwargs)
-

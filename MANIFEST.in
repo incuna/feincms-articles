@@ -2,4 +2,3 @@ include README.markdown
 recursive-include * *.html
 recursive-include * *.json
 recursive-include * *.txt
-

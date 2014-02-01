@@ -24,63 +24,68 @@ class CategoryAccesssGroupsMixin(object):
 
 
 class CategoryArticleDetail(ArticleDetail, CategoryAccesssGroupsMixin):
-    template_name = "articles/category_article_detail.html"
+    template_name = 'articles/category_article_detail.html'
+
     def get_queryset(self):
-        return super(CategoryArticleDetail, self).get_queryset().filter(category__local_url=self.kwargs['category_url'])
+        qs = super(CategoryArticleDetail, self).get_queryset()
+        return qs.filter(category__local_url=self.kwargs['category_url'])
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
 
         if not self.has_access_groups_permission(self.object.category):
-            return HttpResponseRedirect("%s?next=%s" % (settings.LOGIN_URL, self.request.path))
+            url = '%s?next=%s' % (settings.LOGIN_URL, self.request.path)
+            return HttpResponseRedirect(url)
 
         return self.render_to_response(context)
 
 
 class CategoryArticleList(ArticleList, CategoryAccesssGroupsMixin):
-    template_name = "articles/category_article_list.html"
+    template_name = 'articles/category_article_list.html'
     category = None
 
     def get(self, request, *args, **kwargs):
-
-        if 'category_url' in self.kwargs:
-            self.category = get_object_or_404(Category, local_url=self.kwargs['category_url'])
+        category_url = self.kwargs.get('category_url')
+        if category_url:
+            self.category = get_object_or_404(Category, local_url=category_url)
             if not self.has_access_groups_permission(self.category):
-                return HttpResponseRedirect("%s?next=%s" % (settings.LOGIN_URL, self.request.path))
+                url = "%s?next=%s" % (settings.LOGIN_URL, self.request.path)
+                return HttpResponseRedirect(url)
 
         elif getattr(settings, 'ARTICLE_SHOW_FIRST_CATEGORY', False):
             # Redirect to the first category
             try:
-                return HttpResponseRedirect(Category.objects.active(user=self.request.user)[0].get_absolute_url())
-            except IndexError as e:
+                category = Category.objects.active(user=self.request.user)[0]
+            except IndexError:
                 pass
-
+            else:
+                return HttpResponseRedirect(category.get_absolute_url())
 
         return super(CategoryArticleList, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(CategoryArticleList, self).get_context_data(**kwargs)
         context['category'] = self.category
-
         return context
 
     def get_queryset(self):
-
         articles = super(CategoryArticleList, self).get_queryset()
         user = self.request.user
 
         # Limit the articles based on the category access_group permission
+        query = Q(category__access_groups__isnull=True)
         if user is not None and user.is_authenticated():
-            query = Q(category__access_groups__isnull=True) | Q(category__access_groups__in=user.groups.all())
-        else:
-            query = Q(category__access_groups__isnull=True)
+            query |= Q(category__access_groups__in=user.groups.all())
+
         articles = articles.filter(query)
 
         if self.category:
             if getattr(settings, 'ARTICLE_SHOW_DESCENDANTS', False):
-                articles = articles.filter(category__in=self.category.get_descendants(include_self=True)).order_by(self.category.order_by)
+                categories = self.category.get_descendants(include_self=True)
+                articles = articles.filter(category__in=categories)
             else:
-                articles = articles.filter(category=self.category).order_by(self.category.order_by)
+                articles = articles.filter(category=self.category)
+            articles = articles.order_by(self.category.order_by)
 
         return articles.select_related('category')

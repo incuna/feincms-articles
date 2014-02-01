@@ -6,7 +6,8 @@ from feincms import extensions
 try:
     from taggit.managers import TaggableManager
 except ImportError:
-   raise ImproperlyConfigured('You need to install django-taggit to use the tags extension')
+    msg = 'You need to install django-taggit to use the tags extension'
+    raise ImproperlyConfigured(msg)
 
 
 class Extension(extensions.Extension):
@@ -17,8 +18,11 @@ class Extension(extensions.Extension):
         @classmethod
         def get_urlpatterns(cls):
             taggit_patterns = patterns('taggit.views',
-                url(r'^tags/(?P<slug>[^/]+)/$', 'tagged_object_list', {
-                    'queryset': cls.objects.active}, name="article_tagged_list"
+                url(
+                    r'^tags/(?P<slug>[^/]+)/$',
+                    'tagged_object_list',
+                    {'queryset': cls.objects.active},
+                    name='article_tagged_list',
                 ),
             )
             return cls.get_urlpatterns_orig() + taggit_patterns

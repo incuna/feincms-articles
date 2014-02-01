@@ -33,7 +33,6 @@ class ArticlesNode(template.Node):
         articles = self.articles and self.articles.resolve(context)
         limit = self.limit and self.limit.resolve(context)
 
-
         if articles is None:
             user = None
             if 'request' in context:
@@ -42,7 +41,6 @@ class ArticlesNode(template.Node):
 
         if limit is not None:
             articles = articles[:limit]
-
 
         if self.varname is not None:
             context[self.varname] = articles
@@ -59,7 +57,7 @@ class ArticlesNode(template.Node):
 
 @register.tag()
 def articles(parser, token):
-    bits = token.split_contents() 
+    bits = token.split_contents()
 
     varname = None
     try:
@@ -74,4 +72,3 @@ def articles(parser, token):
         kwargs['varname'] = varname
 
     return ArticlesNode(*args, **kwargs)
-

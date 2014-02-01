@@ -22,14 +22,23 @@ class ArticleCategoryList(models.Model):
     @classmethod
     def initialize_type(cls, LAYOUT_CHOICES=None):
 
-        cls.add_to_class('layout', models.CharField(_('Layout'),
-                                                    max_length=10, choices=LAYOUT_CHOICES,
-                                                    default=LAYOUT_CHOICES[0][0]))
+        cls.add_to_class(
+            'layout',
+            models.CharField(
+                _('Layout'),
+                max_length=10,
+                choices=LAYOUT_CHOICES,
+                default=LAYOUT_CHOICES[0][0]
+            )
+        )
 
         class ArticleCategoryListForm(ItemEditorForm):
-            layout = forms.ChoiceField(choices=LAYOUT_CHOICES,
-                                       initial=LAYOUT_CHOICES[0][0], label=_('Layout'),
-                                       widget=AdminRadioSelect(attrs={'class': 'radiolist'}))
+            layout = forms.ChoiceField(
+                choices=LAYOUT_CHOICES,
+                initial=LAYOUT_CHOICES[0][0],
+                label=_('Layout'),
+                widget=AdminRadioSelect(attrs={'class': 'radiolist'})
+            )
 
         cls.feincms_item_editor_form = ArticleCategoryListForm
         cls.form = ArticleCategoryListForm
@@ -48,7 +57,7 @@ class ArticleCategoryList(models.Model):
             'content/articles/category/%s/default.html' % self.region,
             'content/articles/category/%s.html' % self.layout,
             'content/articles/category/default.html',
-            ], context)
+        ], context)
 
 
 class ArticleList(models.Model):
@@ -75,7 +84,7 @@ class ArticleList(models.Model):
             'request': kwargs.get('request'),
             'content': self,
         }
-        return render_to_string(['content/articles/%s/list.html' % self.region,
-                                 'content/articles/list.html',
-                                ],
-                                context)
+        return render_to_string([
+            'content/articles/%s/list.html' % self.region,
+            'content/articles/list.html',
+        ], context)
