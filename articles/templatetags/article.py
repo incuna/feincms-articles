@@ -11,18 +11,13 @@ class ArticlesNode(template.Node):
         Output a list of articles.
         If as varname is specified then add the result to the context.
 
-        Usage:
+        Usage examples:
             {% articles %}
-            OR
             {% articles articles %}
-            OR
             {% articles articles limit %}
-            OR
-            {% articles as artilce_list %}
-            OR
-            {% articles articles as artilce_list %}
-            OR
-            {% articles limit=limit as artilce_list %}
+            {% articles as article_list %}
+            {% articles articles as article_list %}
+            {% articles limit=limit as article_list %}
     """
     def __init__(self, articles=None, limit=None, varname=None):
         self.articles = articles
