@@ -75,7 +75,7 @@ ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.
 
 
 class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
-    list_display = ['title', 'active',]
+    list_display = ['title', 'active']
     list_filter = []
     search_fields = ['title', 'slug']
     filter_horizontal = []
@@ -90,4 +90,3 @@ class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
     ]
 
     fieldset_insertion_index = 1
-

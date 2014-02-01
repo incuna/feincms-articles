@@ -5,9 +5,7 @@ from .models import Article
 
 class AppContentMixin(object):
     def render_to_response(self, context, **response_kwargs):
-        """
-        Returns the template tuple needed for FeinCMS App Content.
-        """
+        """Returns the template tuple needed for FeinCMS App Content."""
         if hasattr(self.request, '_feincms_extra_context') and 'app_config' in self.request._feincms_extra_context:
             return (self.get_template_names(), context)
 
