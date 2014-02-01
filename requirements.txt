@@ -1,3 +1,9 @@
 # For categories
 #https://github.com/initcrash/django-denorm/tarball/7b0c1c9db9e81eb16bf229d41bd89b21f75c6168#egg=denorm
 git+http://github.com/initcrash/django-denorm.git@7b0c1c9db9e81eb16bf229d41bd89b21f75c6168#egg=denorm
+-e .
+
+coverage==3.7.1
+dj_database_url==0.2.2
+django-taggit==0.11.2
+psycopg2==2.5.2
