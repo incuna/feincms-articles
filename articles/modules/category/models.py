@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from feincms.admin import editor
+from feincms.admin import tree_editor as editor
 from feincms.content.application import models as app_models
 
 from articles.models import Article
