@@ -1,5 +1,10 @@
 # feincms-articles changelog
 
+## v1.1
+
+* Update category extension registration method to FeinCMS 1.9.3 standard.
+* Create BaseArticle abstract model to allow subclassing.
+
 ## v1.0
 
 * Migrate extensions to inherit from ``feincms.extensions.Extension``. Support

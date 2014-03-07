@@ -10,7 +10,7 @@ setup(
         'django-mptt',
         'django-pagination',
     ],
-    version='1.0',
+    version='1.1',
     description='Provides Articles using (FeinCMS content) with categories and tags.',
     author='Incuna Ltd',
     author_email='admin@incuna.com',
