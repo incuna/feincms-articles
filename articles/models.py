@@ -23,7 +23,7 @@ class ArticleManager(ActiveAwareContentManagerMixin, models.Manager):
 
 
 @python_2_unicode_compatible
-class Article(ContentModelMixin, Base):
+class BaseArticle(ContentModelMixin, Base):
     active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(_('title'), max_length=255)
@@ -34,6 +34,7 @@ class Article(ContentModelMixin, Base):
         unique_together = []
         verbose_name = _('article')
         verbose_name_plural = _('articles')
+        abstract = True
 
     objects = ArticleManager()
 
@@ -68,7 +69,11 @@ class Article(ContentModelMixin, Base):
 
     @property
     def is_active(self):
-        return Article.objects.active().filter(pk=self.pk).count() > 0
+        return BaseArticle.objects.active().filter(pk=self.pk).count() > 0
+
+
+class Article(BaseArticle):
+    pass
 
 
 ModelAdmin = get_callable(getattr(settings, 'ARTICLE_MODELADMIN_CLASS', 'django.contrib.admin.ModelAdmin'))
