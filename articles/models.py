@@ -69,7 +69,7 @@ class BaseArticle(ContentModelMixin, Base):
 
     @property
     def is_active(self):
-        return BaseArticle.objects.active().filter(pk=self.pk).count() > 0
+        return self.__class__.objects.active().filter(pk=self.pk).count() > 0
 
 
 class Article(BaseArticle):
