@@ -1,5 +1,10 @@
 # feincms-articles changelog
 
+## v1.1.1
+
+* Move ArticleAdmin into bases.py
+* Fix use of ARTICLE_MODELADMIN_CLASS setting
+
 ## v1.1
 
 * Update category extension registration method to FeinCMS 1.9.3 standard.
