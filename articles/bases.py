@@ -1,9 +1,15 @@
+from django.conf import settings
+from django.core.urlresolvers import get_callable
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns, url
 from django.utils.encoding import python_2_unicode_compatible
 
+try:
+    from feincms.admin.item_editor import ItemEditor
+except ImportError:
+    from feincm.admin.editor import ItemEditor
 from feincms.content.application import models as app_models
 from feincms.models import Base
 from feincms.module.mixins import ContentModelMixin
@@ -19,7 +25,13 @@ class BaseArticle(ContentModelMixin, Base):
     active = models.BooleanField(_('active'), default=True)
 
     title = models.CharField(_('title'), max_length=255)
-    slug = models.SlugField(_('slug'), max_length=255, help_text=_('This will be automatically generated from the name'), unique=True, editable=True)
+    slug = models.SlugField(
+        _('slug'),
+        max_length=255,
+        help_text=_('This will be automatically generated from the name'),
+        unique=True,
+        editable=True,
+    )
 
     class Meta:
         ordering = ['title']
@@ -62,3 +74,25 @@ class BaseArticle(ContentModelMixin, Base):
     @property
     def is_active(self):
         return self.__class__.objects.active().filter(pk=self.pk).count() > 0
+
+
+ExtensionModelAdmin = get_callable(getattr(
+    settings, 'ARTICLE_MODELADMIN_CLASS', 'feincms.extensions.ExtensionModelAdmin'))
+
+
+class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
+    list_display = ['title', 'active']
+    list_filter = []
+    search_fields = ['title', 'slug']
+    filter_horizontal = []
+    prepopulated_fields = {
+        'slug': ('title',),
+    }
+    fieldsets = [
+        (None, {
+            'fields': ['active', 'title', 'slug']
+        }),
+        # <-- insertion point, extensions appear here, see insertion_index above
+    ]
+
+    fieldset_insertion_index = 1
