@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Article, ArticleAdmin
+from .bases import ArticleAdmin
+from .models import Article
 
 
 admin.site.register(Article, ArticleAdmin)
