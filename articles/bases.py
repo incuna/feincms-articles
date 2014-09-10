@@ -44,7 +44,7 @@ class BaseArticle(ContentModelMixin, Base):
 
     @classmethod
     def get_urlpatterns(cls):
-        from .import views
+        from . import views
         return patterns('',
             url(r'^$', views.ArticleList.as_view(), name='article_index'),
             url(r'^(?P<slug>[a-z0-9_-]+)/$', views.ArticleDetail.as_view(), name='article_detail'),
