@@ -1,7 +1,7 @@
 from django.db.models.fields import FieldDoesNotExist
 from haystack import indexes
 
-from models import Article
+from .models import Article
 
 
 class TempArticleIndex(indexes.SearchIndex):

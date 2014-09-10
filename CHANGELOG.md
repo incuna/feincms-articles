@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## Upcoming
+
+* Change two imports to relative import for python 3 compatibility
+
 ## v1.1.1
 
 * Move ArticleAdmin into bases.py
