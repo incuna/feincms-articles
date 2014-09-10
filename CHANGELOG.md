@@ -1,6 +1,6 @@
 # feincms-articles changelog
 
-## Upcoming
+## v1.1.2
 
 * Change two imports to relative import for python 3 compatibility
 
