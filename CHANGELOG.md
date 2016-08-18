@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## v1.1.3
+
+* `articles` no longer requires being above app overriding `ArticleAdmin` in `installed_apps`.
+
 ## v1.1.2
 
 * Change two imports to relative import for python 3 compatibility
