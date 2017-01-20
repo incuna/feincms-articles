@@ -3,7 +3,7 @@ from django.core.urlresolvers import get_callable
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.utils.encoding import python_2_unicode_compatible
 
 try:
@@ -45,10 +45,10 @@ class BaseArticle(ContentModelMixin, Base):
     @classmethod
     def get_urlpatterns(cls):
         from . import views
-        return patterns('',
+        return [
             url(r'^$', views.ArticleList.as_view(), name='article_index'),
             url(r'^(?P<slug>[a-z0-9_-]+)/$', views.ArticleDetail.as_view(), name='article_detail'),
-        )
+        ]
 
     @classmethod
     def remove_field(cls, f_name):
