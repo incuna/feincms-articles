@@ -18,20 +18,6 @@ def find(f, seq):
             return item
 
 
-class ArticleAccessTests(TestCase):
-    fixtures = ['articles_data.json',]
-    def test_article_index(self):
-        response = self.client.get(reverse('article_index'))
-        for article in Article.objects.active():
-            self.assertContains(response, article.title)
-
-    def test_article_detail(self):
-        response = self.client.get(reverse('article_detail', args=['test-article',]))
-
-
-        article = Article.objects.active().get(slug='test-article')
-        self.assertContains(response, article.title)
-
 class ArticleActiveTests(TestCase):
     fixtures = ['articles_data.json',]
     def test_article_active(self):

@@ -11,6 +11,7 @@ from django.test.runner import DiscoverRunner
 
 
 settings.configure(
+    ROOT_URLCONF='articles.urls',
     DATABASES={
         'default': dj_database_url.config(
             default='postgres://localhost/articles'
