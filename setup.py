@@ -6,9 +6,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'FeinCMS>=1.7',
-        'django-mptt',
-        'django-pagination',
+        'FeinCMS~=1.13',
+        'django-mptt~=0.8.7',
     ],
     version='1.1.3',
     description='Provides Articles using (FeinCMS content) with categories and tags.',
