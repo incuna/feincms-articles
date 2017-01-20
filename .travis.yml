@@ -1,0 +1,9 @@
+language: python
+python:
+  - 3.6
+script: python tests/run.py
+notifications:
+  email: false
+install:
+  - createdb articles
+  - pip install -r requirements.txt
