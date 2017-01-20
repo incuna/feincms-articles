@@ -2,7 +2,9 @@
 colour-runner==0.0.5
 dj-database-url>=0.4.2,<0.5
 django>=1.10.5,<1.11
+factory-boy==2.8.1
 incuna-test-utils==6.6.0
+psycopg2==2.6.2
 
 # For categories
 #https://github.com/initcrash/django-denorm/tarball/7b0c1c9db9e81eb16bf229d41bd89b21f75c6168#egg=denorm

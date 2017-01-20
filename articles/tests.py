@@ -20,14 +20,6 @@ def find(f, seq):
 
 class ArticleActiveTests(TestCase):
     fixtures = ['articles_data.json',]
-    def test_article_active(self):
-        response = self.client.get(reverse('article_index'))
-
-
-        inactive_articles = Article.objects.exclude(pk__in=[a[0] for a in Article.objects.active().values_list('pk')])
-        assert(inactive_articles)
-        for article in inactive_articles:
-            self.assertNotContains(response, article.title)
 
     def test_article_views_404(self):
         response = self.client.get(reverse('article_detail', args=['inactive-article',]))
