@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## 1.2
+
+* remove `patterns` in url.
+
 ## v1.1.3
 
 * `articles` no longer requires being above app overriding `ArticleAdmin` in `installed_apps`.
