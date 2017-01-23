@@ -20,8 +20,16 @@ settings.configure(
     INSTALLED_APPS=(
         'articles',
 
+        'feincms',
+
         'django.contrib.contenttypes',
     ),
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'APP_DIRS': True,
+        }
+    ],
 )
 
 
@@ -35,4 +43,4 @@ class TestRunner(ColourRunnerMixin, DiscoverRunner):
 test_runner = TestRunner(verbosity=1)
 failures = test_runner.run_tests(['tests'])
 if failures:
-    sys.exit(1)
+    exit(1)

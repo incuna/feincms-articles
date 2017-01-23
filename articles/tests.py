@@ -18,13 +18,6 @@ def find(f, seq):
             return item
 
 
-class ArticleActiveTests(TestCase):
-    fixtures = ['articles_data.json',]
-
-    def test_article_views_404(self):
-        response = self.client.get(reverse('article_detail', args=['inactive-article',]))
-        self.assertEquals(response.status_code, 404)
-
 # extension related tests
 class ArticleDatePublisherTests(TestCase):
     fixtures = ['articles_datepublisher_data.json',]
