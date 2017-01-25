@@ -19,6 +19,7 @@ settings.configure(
     },
     INSTALLED_APPS=(
         'articles',
+        'tests',
 
         'feincms',
 

@@ -12,7 +12,6 @@ class TestUrl(URLTestCase):
             url_name='article_index',
         )
 
-
     def test_article_detail(self):
         slug = 'ellobiidae'
         self.assert_url_matches_view(
