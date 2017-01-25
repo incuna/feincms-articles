@@ -5,7 +5,7 @@ django>=1.10.5,<1.11
 factory-boy==2.8.1
 feincms==1.13.1
 incuna-test-utils==6.6.0
-pillow=4.0.0
+pillow==4.0.0
 psycopg2==2.6.2
 
 # For categories
