@@ -12,7 +12,7 @@ class TempArticleIndex(indexes.SearchIndex):
     def get_model(self):
         return Article
 
-    def index_queryset(self):
+    def index_queryset(self, **kwargs):
         return self.get_model().objects.active()
 
     def get_updated_field(self, **kwargs):
