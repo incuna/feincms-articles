@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.urlresolvers import get_callable
+from django.core.urlresolvers import get_callable, reverse_lazy
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -67,9 +67,8 @@ class BaseArticle(ContentModelMixin, Base):
     def __str__(self):
         return self.title
 
-    @app_models.permalink
     def get_absolute_url(self):
-        return ('article_detail', 'articles.urls', (), {'slug': self.slug})
+        return reverse_lazy('article_detail', kwargs={'slug': self.slug})
 
     @property
     def is_active(self):
