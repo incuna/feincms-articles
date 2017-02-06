@@ -1,6 +1,6 @@
 # feincms-articles changelog
 
-## Upcoming
+## 1.2.1
 
 * Allow for `using` keyword argument in `ArticleIndex.index_queryset`.
 
