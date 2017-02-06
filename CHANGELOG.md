@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## Upcoming
+
+* Allow for `using` keyword argument in `ArticleIndex.index_queryset`.
+
 ## 1.2
 
 * remove `patterns` in url.
