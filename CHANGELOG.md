@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## 1.2.2
+
+* Change `Article.get_absolute_url` to use `reverse_lazy`.
+
 ## 1.2.1
 
 * Allow for `using` keyword argument in `ArticleIndex.index_queryset`.
