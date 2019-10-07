@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## 1.2.3
+
+* Add `ArticleAdmin.change_view` to fix compatibility with `ItemEditor.change_view`.
+
 ## 1.2.2
 
 * Change `Article.get_absolute_url` to use `reverse_lazy`.
