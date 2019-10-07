@@ -95,3 +95,19 @@ class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
     ]
 
     fieldset_insertion_index = 1
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        """
+        Ensure ItemEditor is called with correct kwargs.
+
+        ItemEditor needs to be called with change_view(request, object_id, **kwargs)
+        If called with change_view(request, object_id, form_url, extra_context) it raises
+        TypeError: change_view() takes 3 positional arguments but 5 were given.
+        """
+        extra_context = {} if extra_context is None else extra_context
+        return super().change_view(
+            request,
+            object_id,
+            form_url=form_url,
+            extra_context=extra_context,
+        )
