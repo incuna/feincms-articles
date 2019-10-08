@@ -1,5 +1,9 @@
 # feincms-articles changelog
 
+## 1.2.4
+
+* Add `ArticleAdmin.add_view` to fix compatibility with `ItemEditor.add_view`.
+
 ## 1.2.3
 
 * Add `ArticleAdmin.change_view` to fix compatibility with `ItemEditor.change_view`.
