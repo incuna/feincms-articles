@@ -96,9 +96,24 @@ class ArticleAdmin(ItemEditor, ExtensionModelAdmin):
 
     fieldset_insertion_index = 1
 
+    def add_view(self, request, form_url='', extra_context=None):
+        """
+        Ensure ItemEditor.add_view is called with correct kwargs.
+
+        ItemEditor needs to be called with add_view(request, **kwargs)
+        If called with add_view(request, form_url, extra_context) it raises
+        TypeError: add_view() takes 2 positional arguments but 4 were given.
+        """
+        extra_context = {} if extra_context is None else extra_context
+        return super().add_view(
+            request,
+            form_url=form_url,
+            extra_context=extra_context,
+        )
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         """
-        Ensure ItemEditor is called with correct kwargs.
+        Ensure ItemEditor.change_view is called with correct kwargs.
 
         ItemEditor needs to be called with change_view(request, object_id, **kwargs)
         If called with change_view(request, object_id, form_url, extra_context) it raises
